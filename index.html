@@ -2,59 +2,80 @@
 <html lang="en-AU">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Croc Crossing">
+<meta name="theme-color" content="#0f3d2e">
 <title>Croc Crossing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
 <style>
   :root { --bg:#0f3d2e; --panel:#fff8ec; --ink:#1d2a24; --orange:#ff7a1a; --blue:#2f7fd8; --green:#3fa34d; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body { margin:0; height:100%; background:var(--bg); color:var(--ink); font-family:'Baloo 2',system-ui,sans-serif; overflow:hidden; touch-action:none; user-select:none; -webkit-user-select:none; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--ink); font-family:'Baloo 2',system-ui,sans-serif; overflow:hidden; touch-action:none; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; }
   #wrap { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:8px; }
   #stage { position:relative; }
   canvas { display:block; border-radius:14px; box-shadow:0 8px 30px rgba(0,0,0,.4); background:#000; }
-  #pad { display:grid; grid-template-columns:repeat(3,72px); grid-template-rows:repeat(2,58px); gap:6px; }
+  #pad { display:flex; gap:18px; align-items:center; }
+  #pad[data-kind=none] { display:none; }
+  #pad[data-kind=arrows] .act, #pad[data-kind=act] .arrows { display:none; }
+  .arrows { display:grid; grid-template-columns:repeat(3,76px); grid-template-rows:repeat(2,60px); gap:6px; }
   #pad button { font:inherit; font-size:30px; border:0; border-radius:16px; background:#ffffffdd; color:var(--ink); box-shadow:0 4px 0 #0005; }
   #pad button:active { transform:translateY(3px); box-shadow:0 1px 0 #0005; background:#ffe2c9; }
-  #pad .up { grid-column:2; grid-row:1; } #pad .left { grid-column:1; grid-row:2; } #pad .down { grid-column:2; grid-row:2; } #pad .right { grid-column:3; grid-row:2; }
-  #topbtns { position:absolute; top:8px; left:8px; display:flex; gap:6px; }
-  #topbtns button { font:inherit; font-size:15px; padding:4px 10px; border:0; border-radius:10px; background:#ffffffcc; }
+  .arrows .up { grid-column:2; grid-row:1; } .arrows .left { grid-column:1; grid-row:2; } .arrows .down { grid-column:2; grid-row:2; } .arrows .right { grid-column:3; grid-row:2; }
+  #pad .act { width:140px; height:126px; font-size:56px; border-radius:30px; background:#ffb36b; }
+  #topbtns { display:flex; gap:8px; }
+  #topbtns.hidden { display:flex !important; visibility:hidden; }
+  #topbtns button { font:inherit; font-size:17px; padding:4px 14px; border:0; border-radius:12px; background:#ffffffcc; }
   .overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#0008; border-radius:14px; }
   .hidden { display:none !important; }
-  .card { background:var(--panel); border-radius:22px; padding:22px 26px; width:min(88%,520px); text-align:center; box-shadow:0 10px 0 #0004; }
-  .card h1 { margin:0; font-size:46px; line-height:1; color:var(--green); }
-  .card h2 { margin:0 0 6px; font-size:34px; line-height:1.1; }
+  .card { background:var(--panel); border-radius:22px; padding:22px 26px; width:min(90%,540px); max-height:92%; overflow:auto; text-align:center; box-shadow:0 10px 0 #0004; }
+  .card h1 { margin:0; font-size:44px; line-height:1; color:var(--green); }
+  .card h2 { margin:0 0 6px; font-size:32px; line-height:1.1; }
   .card p { font-size:21px; margin:8px 0; line-height:1.25; }
-  .card .big { font-size:64px; line-height:1.1; margin:4px 0; }
+  .card .big { font-size:70px; line-height:1.15; margin:4px 0; white-space:pre-line; cursor:pointer; }
   .btn { font:inherit; font-size:28px; font-weight:800; border:0; border-radius:18px; padding:10px 26px; margin:8px 6px 0; color:#fff; background:var(--orange); box-shadow:0 6px 0 #a5490a; cursor:pointer; }
   .btn:active { transform:translateY(4px); box-shadow:0 2px 0 #a5490a; }
   .btn.blue { background:var(--blue); box-shadow:0 6px 0 #1b4f8c; }
+  .btn.small { font-size:18px; padding:6px 14px; }
   .players { display:flex; gap:14px; justify-content:center; margin-top:14px; }
-  .pbtn { font:inherit; border:0; border-radius:22px; padding:12px 18px; min-width:150px; color:#fff; cursor:pointer; box-shadow:0 6px 0 #0005; }
-  .pbtn b { display:block; font-size:34px; line-height:1; } .pbtn span { font-size:17px; }
+  .pbtn { font:inherit; border:0; border-radius:22px; padding:12px 18px; min-width:170px; color:#fff; cursor:pointer; box-shadow:0 6px 0 #0005; }
+  .pbtn b { display:block; font-size:36px; line-height:1; } .pbtn span { font-size:16px; }
   .small { font-size:15px !important; color:#56645d; }
-  select { font:inherit; font-size:16px; border-radius:8px; padding:2px 6px; }
+  .buddies { display:flex; gap:12px; justify-content:center; margin-top:10px; }
+  .buddy { font:inherit; border:0; border-radius:20px; background:#e8f6e0; padding:10px 14px; width:140px; cursor:pointer; box-shadow:0 5px 0 #0003; }
+  .buddy span { display:block; font-size:60px; line-height:1.1; } .buddy b { display:block; font-size:24px; } .buddy i { font-style:normal; color:#56645d; font-size:15px; }
+  #guideList h3 { text-align:left; margin:12px 0 4px; font-size:20px; }
+  .stickers { display:flex; flex-wrap:wrap; gap:8px; }
+  .sticker { font:inherit; border:0; border-radius:14px; background:#e8f6e0; width:96px; padding:6px 4px; cursor:pointer; }
+  .sticker span { display:block; font-size:38px; } .sticker b { display:block; font-size:12px; line-height:1.1; }
+  .sticker i { display:block; font-style:normal; font-size:12px; color:#2f7fd8; }
+  .sticker.locked { background:#eee; color:#999; }
+  #guideFact { font-size:18px; min-height:48px; background:#fff; border-radius:12px; padding:8px; margin:10px 0 0; }
+  .row { display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:18px; margin:10px 0; text-align:left; }
+  input, select { font:inherit; font-size:18px; border-radius:10px; border:2px solid #ccc; padding:4px 8px; }
 </style>
 </head>
 <body>
 <div id="wrap">
+  <div id="topbtns" class="hidden"><button id="menuBtn">👤 Players</button><button id="mapBtn">🗺️ Map</button><button id="guideBtn">📒 Field Guide</button><button id="setBtn">⚙️</button></div>
   <div id="stage">
     <canvas id="game" width="704" height="832"></canvas>
-    <div id="topbtns" class="hidden"><button id="menuBtn">☰ Menu</button></div>
 
     <div id="menu" class="overlay">
       <div class="card">
         <h1>🐊 Croc Crossing</h1>
-        <p>Hop over the road, ride the river,<br>and find the right letters!</p>
+        <p>A Top End adventure — from Darwin<br>to our neighbours across the sea!</p>
         <div class="players">
-          <button class="pbtn" style="background:#ff7a1a" data-player="Felix"><b>Felix</b><span id="lvFelix">Level 1</span></button>
-          <button class="pbtn" style="background:#2f7fd8" data-player="Remi"><b>Remi</b><span id="lvRemi">Level 1</span></button>
+          <button class="pbtn" style="background:#ff7a1a" data-player="Felix"><b>Felix</b><span id="lvFelix"></span></button>
+          <button class="pbtn" style="background:#2f7fd8" data-player="Remi"><b>Remi</b><span id="lvRemi"></span></button>
         </div>
-        <p class="small">Grown-ups: start at level
-          <select id="lvlPick"><option value="">saved</option></select>
-          · 1–3 letters · 4–6 sounds · 7–9 three-letter words · 10–12 four · 13+ big words · car bonus every 3 levels</p>
+        <p class="small">We play on Larrakia Country. 🙏</p>
       </div>
+    </div>
+
+    <div id="buddyPick" class="overlay hidden">
+      <div class="card"><h2>Pick your buddy!</h2><div class="buddies" id="buddies"></div></div>
     </div>
 
     <div id="card" class="overlay hidden">
@@ -62,18 +83,44 @@
         <h2 id="cardTitle"></h2>
         <div class="big" id="cardBig"></div>
         <p id="cardText"></p>
-        <button class="btn" id="cardBtn">Go!</button>
+        <button class="btn" id="cardBtn">Go!</button><button class="btn blue hidden" id="cardBtn2"></button>
+      </div>
+    </div>
+
+    <div id="guide" class="overlay hidden">
+      <div class="card"><h2>📒 Field Guide</h2><div id="guideList"></div><p id="guideFact"></p><button class="btn small" id="guideClose">Close</button></div>
+    </div>
+
+    <div id="settings" class="overlay hidden">
+      <div class="card">
+        <h2>⚙️ Grown-ups</h2>
+        <div id="lockBox"><p id="lockQ"></p><input id="lockA" type="number" inputmode="numeric" style="width:120px"> <button class="btn small" id="lockGo">OK</button></div>
+        <div id="setBox" class="hidden">
+          <div class="row">Play time limit <select id="setLimit"><option value="10">10 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="0">No limit</option></select></div>
+          <div class="row">Show Larrakia / Kriol names (checked ones only) <input type="checkbox" id="setCulture"></div>
+          <div class="row"><span id="playedFor"></span><button class="btn small" id="setReset">Reset timer</button></div>
+          <div class="row"><button class="btn small blue" id="setUnlock">Unlock all places</button><button class="btn small" id="setWipe" style="background:#c0392b">Reset player</button></div>
+        </div>
+        <button class="btn small blue" id="setClose">Close</button>
       </div>
     </div>
   </div>
-  <div id="pad">
-    <button class="up" data-k="up">⬆️</button>
-    <button class="left" data-k="left">⬅️</button>
-    <button class="down" data-k="down">⬇️</button>
-    <button class="right" data-k="right">➡️</button>
+  <div id="pad" data-kind="none">
+    <div class="arrows">
+      <button class="up" data-k="up">⬆️</button><button class="left" data-k="left">⬅️</button><button class="down" data-k="down">⬇️</button><button class="right" data-k="right">➡️</button>
+    </div>
+    <button class="act" data-k="act">🎣</button>
   </div>
 </div>
-<script src="data.js"></script>
-<script src="game.js"></script>
+<script src="content.js"></script>
+<script src="lines.js"></script>
+<script src="core.js"></script>
+<script src="questions.js"></script>
+<script src="hop.js"></script>
+<script src="map.js"></script>
+<script src="fish.js"></script>
+<script src="surf.js"></script>
+<script src="car.js"></script>
+<script>G.boot();</script>
 </body>
 </html>
