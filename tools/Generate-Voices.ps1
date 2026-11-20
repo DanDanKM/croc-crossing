@@ -10,6 +10,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $key = $env:ELEVENLABS_API_KEY
+if (-not $key) { $key = [Environment]::GetEnvironmentVariable('ELEVENLABS_API_KEY', 'User') }  # set with setx
 if (-not $key) { throw 'Set $env:ELEVENLABS_API_KEY first (ElevenLabs > Profile > API keys).' }
 
 $raw = [IO.File]::ReadAllText((Join-Path $root 'data.js'), [Text.Encoding]::UTF8)
