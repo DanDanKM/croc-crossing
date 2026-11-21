@@ -6,6 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Croc Crossing">
 <meta name="theme-color" content="#0f3d2e">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
 <title>Croc Crossing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
@@ -121,6 +125,17 @@
 <script src="fish.js"></script>
 <script src="surf.js"></script>
 <script src="car.js"></script>
-<script>G.boot();</script>
+<script>
+G.boot();
+// offline: register the service worker, then quietly cache every voice clip once (so it works in the car)
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js').then(() => navigator.serviceWorker.ready).then(async () => {
+    try { if (localStorage.getItem('croc2-voices-cached') === (window.LINES ? Object.keys(LINES).length + '' : '')) return; } catch (e) {}
+    const keys = await fetch('voice/index.json').then(r => r.json()).catch(() => []);
+    for (let i = 0; i < keys.length; i += 6) await Promise.all(keys.slice(i, i + 6).map(k => fetch('voice/' + encodeURIComponent(k) + '.mp3').catch(() => {})));
+    try { localStorage.setItem('croc2-voices-cached', Object.keys(LINES).length + ''); } catch (e) {}
+  }).catch(() => {});
+}
+</script>
 </body>
 </html>

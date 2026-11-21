@@ -1,0 +1,63 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Icon maker</title>
+<body style="background:#333;margin:20px">
+<canvas id="c" width="1024" height="1024" style="width:256px"></canvas>
+<script>
+// Draws the Croc Crossing app icon at any size (run via the local server, which saves the PNGs).
+function drawIcon(cv) {
+  const g = cv.getContext('2d'), S = cv.width, k = S / 1024;
+  g.save(); g.scale(k, k);
+  // sky + sea
+  let gr = g.createLinearGradient(0, 0, 0, 1024); gr.addColorStop(0, '#ffb347'); gr.addColorStop(.45, '#ff7a1a'); gr.addColorStop(.46, '#1f9bb8'); gr.addColorStop(1, '#0f5f86');
+  g.fillStyle = gr; g.fillRect(0, 0, 1024, 1024);
+  g.fillStyle = '#ffe27a'; g.beginPath(); g.arc(790, 230, 110, 0, Math.PI * 2); g.fill();
+  // waves
+  g.strokeStyle = '#ffffff55'; g.lineWidth = 14;
+  for (let i = 0; i < 4; i++) { g.beginPath(); g.arc(150 + i * 250, 900, 50, .2 * Math.PI, .8 * Math.PI); g.stroke(); }
+  // croc head rising from the water
+  const cx = 512, cy = 600;
+  g.fillStyle = '#2f8a3a';
+  g.beginPath(); g.ellipse(cx, cy + 40, 360, 150, 0, 0, Math.PI * 2); g.fill();
+  // upper jaw (open, smiling)
+  g.fillStyle = '#3fa34d';
+  g.beginPath(); g.moveTo(cx - 330, cy); g.quadraticCurveTo(cx - 300, cy - 230, cx, cy - 240); g.quadraticCurveTo(cx + 300, cy - 230, cx + 360, cy - 40); g.quadraticCurveTo(cx + 380, cy + 10, cx + 330, cy + 10); g.lineTo(cx - 330, cy + 10); g.closePath(); g.fill();
+  // mouth
+  g.fillStyle = '#c2414b'; g.beginPath(); g.moveTo(cx - 300, cy + 10); g.quadraticCurveTo(cx, cy + 170, cx + 330, cy + 10); g.closePath(); g.fill();
+  g.fillStyle = '#ff8fa3'; g.beginPath(); g.ellipse(cx + 20, cy + 80, 110, 40, 0, 0, Math.PI * 2); g.fill();
+  // teeth
+  g.fillStyle = '#fff';
+  for (let i = 0; i < 9; i++) { const x = cx - 270 + i * 66; g.beginPath(); g.moveTo(x, cy + 8); g.lineTo(x + 22, cy + 52 - Math.abs(i - 4) * 4); g.lineTo(x + 44, cy + 8); g.fill(); }
+  // nostrils
+  g.fillStyle = '#1f6b2a'; g.beginPath(); g.ellipse(cx + 250, cy - 120, 18, 12, .3, 0, Math.PI * 2); g.fill(); g.beginPath(); g.ellipse(cx + 300, cy - 100, 18, 12, .3, 0, Math.PI * 2); g.fill();
+  // eyes on top
+  for (const ex of [cx - 170, cx + 20]) {
+    g.fillStyle = '#3fa34d'; g.beginPath(); g.arc(ex, cy - 250, 95, Math.PI, 0); g.fill(); g.beginPath(); g.ellipse(ex, cy - 250, 95, 70, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#fff'; g.beginPath(); g.arc(ex, cy - 260, 66, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#1d2a24'; g.beginPath(); g.arc(ex + 14, cy - 252, 34, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#fff'; g.beginPath(); g.arc(ex + 26, cy - 266, 12, 0, Math.PI * 2); g.fill();
+  }
+  // scutes
+  g.fillStyle = '#2f8a3a';
+  for (let i = 0; i < 4; i++) { const x = cx - 60 + i * 60; g.beginPath(); g.moveTo(x, cy - 228); g.lineTo(x + 24, cy - 262); g.lineTo(x + 48, cy - 228); g.fill(); }
+  // letter blocks
+  const blocks = [['A', '#ffd23f', 150, 120, -.18], ['B', '#5cc8ff', 330, 70, .1], ['C', '#ff8fc7', 520, 130, -.06]];
+  for (const [L, col, x, y, r] of blocks) {
+    g.save(); g.translate(x + 70, y + 70); g.rotate(r);
+    g.fillStyle = '#00000033'; g.beginPath(); g.roundRect(-62, -54, 136, 136, 26); g.fill();
+    g.fillStyle = col; g.beginPath(); g.roundRect(-70, -70, 140, 140, 26); g.fill();
+    g.fillStyle = '#1d2a24'; g.font = '900 110px Arial Rounded MT Bold, Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(L, 0, 6);
+    g.restore();
+  }
+  g.restore();
+}
+async function save(size, name) {
+  const cv = document.createElement('canvas'); cv.width = cv.height = size; drawIcon(cv);
+  const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+  const res = await fetch('/save/' + name, { method: 'POST', body: blob });
+  return name + ' ' + res.status;
+}
+drawIcon(document.getElementById('c'));
+window.saveAll = async () => [await save(180, 'apple-touch-icon.png'), await save(192, 'icon-192.png'), await save(512, 'icon-512.png'), await save(1024, 'icon-1024.png')];
+</script>
+</body>

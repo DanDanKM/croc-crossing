@@ -6,6 +6,12 @@ $l = New-Object Net.HttpListener; $l.Prefixes.Add("http://localhost:$Port/"); $l
 Write-Host "Croc Crossing on http://localhost:$Port/"
 while ($l.IsListening) {
   $c = $l.GetContext(); $p = [Uri]::UnescapeDataString($c.Request.Url.AbsolutePath.TrimStart('/')); if (-not $p) { $p = 'index.html' }
+  if ($c.Request.HttpMethod -eq 'POST' -and $p -match '^save/([\w\-]+\.png)$') { # icon.html saves rendered icons into icons\
+    $dir = Join-Path $root 'icons'; New-Item -ItemType Directory -Force $dir | Out-Null
+    $fs = [IO.File]::Create((Join-Path $dir $Matches[1])); $c.Request.InputStream.CopyTo($fs); $fs.Close()
+    $c.Response.StatusCode = 201; $c.Response.Close(); continue
+  }
+  if ($p.EndsWith('/')) { $p += 'index.html' }
   $f = Join-Path $root $p
   if ((Test-Path $f -PathType Leaf) -and ([IO.Path]::GetFullPath($f).StartsWith($root))) {
     $b = [IO.File]::ReadAllBytes($f); $c.Response.ContentType = $types[[IO.Path]::GetExtension($f)]; $c.Response.Headers.Add('Cache-Control','no-store')
