@@ -2,7 +2,7 @@
 # Key: $env:ELEVENLABS_API_KEY or the User variable saved with setx.
 # Only new or changed lines are generated (voice\manifest.json remembers text + voice); clips no longer used are deleted.
 param(
-  [string]$VoiceId = 'IKne3meq5aSn9XLyUdCD',      # Charlie - Australian narrator
+  [string]$VoiceId = 'NihRgaLj2HWAjvZ5XNxl',      # Matilda - Australian storyteller (picked 22/11)
   [string]$CrocVoiceId = '2EiwWnXFnvU5JabPnv8n',  # Clyde - gravelly croc character
   [string]$IndoVoiceId = 'gjhfBUoH6DHh0DG1X4u0', # Gavrila - Indonesian words (idw_*)
   [string]$Model = 'eleven_multilingual_v2',
