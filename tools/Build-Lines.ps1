@@ -61,6 +61,12 @@ for ($n = 0; $n -lt 10; $n++) { Add "n_$($n + 1)" "$($C.count10.en[$n])!"; Add "
 foreach ($v in $C.verbs) { W $v; Add "jv_$v" "Find the doing word... $v!" }
 foreach ($p in $C.beats.PSObject.Properties) { W $p.Name }
 foreach ($p in $C.shop) { Add "shop_$($p[0])" "A $($p[2])!" }
+# v4: Tagalog words from Lola Lou (tlw_* voiced by a Filipino voice), maths numbers, new games' lines
+foreach ($gr in $C.tagalog.greet) { Add "tlw_$(Slug $gr[0])" "$($gr[0])."; Add "tm_$(Slug $gr[0])" "It means $($gr[1])." }
+foreach ($n in $C.tagalog.numbers) { Add "tlw_$(Slug $n)" "$n." }
+for ($n = 0; $n -le 10; $n++) { Add "n_$n" "$(@('zero','one','two','three','four','five','six','seven','eight','nine','ten')[$n])!" }
+$extra = Join-Path $root 'tools\extra-lines.json'
+if (Test-Path $extra) { (Get-Content $extra -Raw -Encoding UTF8 | ConvertFrom-Json).PSObject.Properties | ForEach-Object { Add $_.Name $_.Value } }
 
 $json = $L | ConvertTo-Json -Compress
 $out = Join-Path $root 'lines.js'

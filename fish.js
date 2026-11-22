@@ -6,17 +6,19 @@ const SURF = 250, TIP = [196, 160];
 let F = null;
 
 function spawnFish() {
-  const r = Math.random(), type = r < .08 ? C.fish[4] : pick(C.fish.slice(0, 4));
+  const r = Math.random(), night = F && F.night;
+  if (night) { const sq = r < .55; return { type: sq ? C.fish[5] : C.fish[0], x: rnd(40, W - 40), y: sq ? rnd(290, 450) : rnd(480, 740), dir: Math.random() < .5 ? 1 : -1, v: rnd(28, 55), scared: 0, wob: rnd(0, 6) }; }
+  const type = r < .08 ? C.fish[4] : pick(C.fish.slice(0, 4));
   const dir = Math.random() < .5 ? 1 : -1;
   return { type, x: rnd(40, W - 40), y: rnd(320, 740), dir, v: rnd(28, 55), scared: 0, wob: rnd(0, 6) };
 }
-function start(run) {
+function start(run, type) {
   const remi = G.isRemi();
-  F = { remi, run, state: 'aim', power: 0, holding: false, lx: TIP[0], ly: TIP[1], fish: [], hooked: null, tension: 0, L: 0, dir: [0, 1], pull: 0, pullT: 0,
-        caught: [], goal: remi ? 2 : 3, time: remi ? 999 : 120, t: 0, show: null, croc: null, castT: 0, from: null, to: null, biteT: 0, msg: '' };
+  F = { remi, run, night: type === 'night', state: 'aim', power: 0, holding: false, lx: TIP[0], ly: TIP[1], fish: [], hooked: null, tension: 0, L: 0, dir: [0, 1], pull: 0, pullT: 0,
+        caught: [], goal: remi ? 2 : 3, time: remi || type === 'night' ? 999 : 120, t: 0, show: null, croc: null, castT: 0, from: null, to: null, biteT: 0, msg: '' };
   for (let i = 0; i < 7; i++) F.fish.push(spawnFish());
   G.setPad('act');
-  G.sayNow('bonus_fish', 'f_aim');
+  G.sayNow(F.night ? 'nf_intro' : 'f_aim');
 }
 function press(k) {
   if (k === 'act') {
@@ -46,11 +48,11 @@ function lost(key) {
   G.sayNow(key);
 }
 function caught() {
-  const f = F.hooked, ty = f.type, len = Math.round(rnd(ty.min, ty.max));
+  const f = F.hooked, ty = f.type, big = F.night && !ty.squid, len = Math.min(130, Math.round(rnd(ty.min, ty.max) + (big ? 20 + (G.prog.nightTrips || 0) * 6 : 0)));
   F.caught.push({ ty, len }); F.show = { ty, len, t: 3 };
   F.fish.splice(F.fish.indexOf(f), 1); F.fish.push(spawnFish());
   F.hooked = null; F.croc = null; F.state = 'show';
-  G.jingle(); G.sayNow('f_got_' + ty.id);
+  G.jingle(); G.sayNow(big ? 'nf_big' : 'f_got_' + ty.id, F.night && F.caught.length === 2 ? 'nf_tom' : null);
 }
 function update(dt) {
   F.t += dt; G.tick(dt);
@@ -107,13 +109,13 @@ function update(dt) {
 function finish() {
   if (F.state === 'end') return; F.state = 'end';
   const real = F.caught.filter(c => !c.ty.boot);
-  G.say('f_done');
-  G.showCard('Fishing trip done! 🎣', real.length ? real.map(() => '🐟').join(' ') : '🥾', real.length ? 'You caught ' + real.length + ' fish! Biggest: ' + Math.max(...real.map(c => c.len)) + ' cm' : 'No fish this time — good try!', 'Next ▶', () => G.stepDone(0));
+  G.say(F.night ? 'nf_done' : 'f_done');
+  G.showCard(F.night ? '🌙🍌🚤' : '🎣', real.length ? real.map(c => c.ty.squid ? '🦑' : '🐟').join(' ') : '🥾', real.length ? '📏 ' + Math.max(...real.map(c => c.len)) + ' cm' : '', '▶', () => G.stepDone(0));
 }
 
 /* ---------- drawing ---------- */
 G.drawFish = function (x, y, ty, dir, s = 1) {
-  if (ty.boot) { g.save(); g.translate(x, y); g.scale(dir, 1); txt('👢', 0, 0, 34 * s, '#000'); g.restore(); return; }
+  if (ty.boot || ty.squid) { g.save(); g.translate(x, y); g.scale(dir, 1); txt(ty.squid ? '🦑' : '👢', 0, 0, 34 * s, '#000'); g.restore(); return; }
   const L = 40 * ty.w * s, Hh = 15 * ty.w * s;
   g.save(); g.translate(x, y); g.scale(dir, 1);
   g.beginPath(); g.moveTo(-L * .8, 0); g.lineTo(-L * 1.25, -Hh * .9); g.lineTo(-L * 1.2, Hh * .9); g.closePath(); g.fillStyle = ty.fin; g.fill();
@@ -124,20 +126,22 @@ G.drawFish = function (x, y, ty, dir, s = 1) {
   g.restore();
 };
 function draw() {
-  const sky = g.createLinearGradient(0, T, 0, SURF); sky.addColorStop(0, '#7cc6f2'); sky.addColorStop(1, '#cfeefe');
+  const sky = g.createLinearGradient(0, T, 0, SURF); sky.addColorStop(0, F.night ? '#0b1530' : '#7cc6f2'); sky.addColorStop(1, F.night ? '#28406e' : '#cfeefe');
   g.fillStyle = sky; g.fillRect(0, T, W, SURF - T);
-  circle(600, 130, 34, '#ffe066');
+  if (F.night) { for (let i = 0; i < 40; i++) circle((i * 97) % W, T + (i * 37) % (SURF - T - 30), 1.6, '#fff'); circle(600, 130, 30, '#f4f1d0'); circle(612, 122, 26, '#0b1530'); } else circle(600, 130, 34, '#ffe066');
   // mangroves on the far bank
   for (let i = 0; i < 9; i++) { const x = 300 + i * 50; g.fillStyle = '#2f6b33'; g.beginPath(); g.arc(x, SURF - 18, 26, Math.PI, 0); g.fill(); g.strokeStyle = '#5e3b19'; g.lineWidth = 2; for (let j = -1; j <= 1; j++) { g.beginPath(); g.moveTo(x + j * 8, SURF - 12); g.lineTo(x + j * 14, SURF); g.stroke(); } }
-  const wat = g.createLinearGradient(0, SURF, 0, H); wat.addColorStop(0, '#3b8fb3'); wat.addColorStop(1, '#173f5a');
+  const wat = g.createLinearGradient(0, SURF, 0, H); wat.addColorStop(0, F.night ? '#16365a' : '#3b8fb3'); wat.addColorStop(1, F.night ? '#050d1c' : '#173f5a');
   g.fillStyle = wat; g.fillRect(0, SURF, W, H - SURF);
   g.fillStyle = '#6b5a3a'; g.beginPath(); g.moveTo(0, H); for (let x = 0; x <= W; x += 40) g.lineTo(x, H - 40 - Math.sin(x * .05) * 12); g.lineTo(W, H); g.fill();
   for (let i = 0; i < 6; i++) { g.strokeStyle = '#ffffff55'; g.lineWidth = 2; g.beginPath(); const x = (i * 130 + F.t * 25) % (W + 80) - 40; g.moveTo(x, SURF + 2); g.quadraticCurveTo(x + 20, SURF - 4, x + 40, SURF + 2); g.stroke(); }
+  if (F.night) { const lg = g.createRadialGradient(150, SURF + 40, 10, 150, SURF + 60, 260); lg.addColorStop(0, '#fff7b0aa'); lg.addColorStop(1, '#fff7b000'); g.fillStyle = lg; g.fillRect(0, SURF, W, 340); }
   for (const f of F.fish) G.drawFish(f.x, f.y, f.type, f.dir);
   if (F.croc) { g.save(); G.drawCroc(F.croc.x - 1.5 * T, F.croc.y - T / 2, 3, F.croc.dir > 0, .3 + Math.sin(F.t * 8) * .3); g.restore(); }
   // boat + Felix
-  g.fillStyle = '#d9d9d9'; g.beginPath(); g.moveTo(40, SURF - 20); g.lineTo(220, SURF - 20); g.lineTo(200, SURF + 10); g.lineTo(60, SURF + 10); g.closePath(); g.fill();
-  g.fillStyle = '#ff7a1a'; g.fillRect(48, SURF - 12, 165, 7); txt('KEIL', 130, SURF + 2, 13, '#1b3b52');
+  g.fillStyle = F.night ? '#d6efe8' : '#d9d9d9'; g.beginPath(); g.moveTo(40, SURF - 20); g.lineTo(220, SURF - 20); g.lineTo(200, SURF + 10); g.lineTo(60, SURF + 10); g.closePath(); g.fill();
+  g.fillStyle = F.night ? '#86b3aa' : '#ff7a1a'; g.fillRect(48, SURF - 12, 165, 7); txt(F.night ? 'UB-19' : 'KEIL', 130, SURF + 2, 13, '#1b3b52');
+  if (F.night) { rr(14, SURF - 30, 30, 34, 6, '#15181b'); g.strokeStyle = '#888'; g.lineWidth = 3; g.beginPath(); g.moveTo(205, SURF - 20); g.lineTo(205, SURF - 70); g.stroke(); circle(205, SURF - 74, 8, '#fff7b0'); }
   G.drawKid(140, SURF - 48, 1);
   g.strokeStyle = '#3a2a1a'; g.lineWidth = 4; g.beginPath(); g.moveTo(150, SURF - 40); g.lineTo(TIP[0], TIP[1]); g.stroke();
   if (F.state !== 'aim') { g.strokeStyle = '#ffffffcc'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(TIP[0], TIP[1]); g.quadraticCurveTo((TIP[0] + F.lx) / 2, Math.max(TIP[1], F.ly) - (F.state === 'fight' ? 0 : 30), F.lx, F.ly); g.stroke(); circle(F.lx, F.ly, 5, '#ff3b3b'); }
@@ -148,7 +152,7 @@ function draw() {
   txt('🎣 ' + F.caught.filter(c => !c.ty.boot).length + ' / ' + F.goal, 120, T / 2, 26, '#ffe14d', 'left');
   if (!F.remi) txt('⏱ ' + Math.max(0, Math.ceil(F.time)) + 's', W - 80, T / 2, 22, '#fff', 'right', 700);
   txt('🔊', W - 36, T / 2, 30, '#fff');
-  const hint = { aim: F.remi ? 'Tap 🎣 to cast!' : 'Hold 🎣 … let go to cast!', cast: '', sink: F.remi ? 'Wait for a bite…' : '⬇️ deeper  ⬆️ up · wait for a bite', bite: 'TAP 🎣 NOW!', fight: F.remi ? 'Reeling in…' : 'Hold 🎣 to reel · let go if red!', show: '', end: '' }[F.state];
+  const hint = { aim: F.remi ? '👆 🎣' : '✊ 🎣 … 🖐️', cast: '', sink: F.remi ? '⏳ 🐟' : '⬇️ ⬆️ ⏳ 🐟', bite: '👆 🎣 !!!', fight: F.remi ? '🎣 ⏳' : '✊ 🎣  🟥 = 🖐️', show: '', end: '' }[F.state];
   if (hint) { rr(W / 2 - 230, T + 10, 460, 40, 14, '#00000066'); txt(hint, W / 2, T + 31, 22, '#fff', 'center', 700); }
   if (F.state === 'aim' && !F.remi) { rr(40, T + 60, 200, 22, 10, '#00000055'); rr(40, T + 60, 200 * F.power, 22, 10, '#ffe14d'); txt('POWER', 140, T + 71, 14, '#1d2a24'); }
   if (F.state === 'fight' && !F.remi) { const tc = F.tension > .75 ? '#e94b3c' : F.tension > .45 ? '#ffd23f' : '#3fa34d'; rr(W - 60, 300, 30, 300, 12, '#00000055'); rr(W - 60, 300 + 300 * (1 - F.tension), 30, 300 * F.tension, 12, tc); txt('LINE', W - 45, 290, 14, '#fff'); }
@@ -159,5 +163,5 @@ function draw() {
     if (!F.show.ty.boot) { txt(F.show.len + ' cm', W / 2, 565, 30, '#ff7a1a'); for (let i = 0; i <= 10; i++) { g.fillStyle = '#56645d'; g.fillRect(W / 2 - 200 + i * 40, 590, 2, i % 5 ? 6 : 12); } }
   }
 }
-G.modes.fish = { start, update, draw, press, release, debug: () => F, pdown() { press('act'); }, pup() { release('act'); }, repeat() { G.sayNow(F.state === 'fight' ? 'f_reel' : 'f_aim'); } };
+G.modes.fish = { start, update, draw, press, release, music: () => F && F.night ? 'night' : 'game', debug: () => F, pdown() { press('act'); }, pup() { release('act'); }, repeat() { G.sayNow(F.state === 'fight' ? 'f_reel' : 'f_aim'); } };
 })();

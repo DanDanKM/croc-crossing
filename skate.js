@@ -77,8 +77,8 @@ function draw() {
   G.drawKid(0, -16, .95);
   g.restore();
   G.drawWeather(S.t);
-  G.hudBar((S.bmx ? '🚲' : '🛹') + ' Grab the word you hear!', '📖 ' + S.got + '/' + S.goal + '  ⏱' + Math.max(0, Math.ceil(S.time)));
-  if (S.t < 6) G.hint('Tap to jump · tap again in the air for a trick');
+  G.hudBar((S.bmx ? '🚲' : '🛹') + ' 👂 🎈', '📖 ' + S.got + '/' + S.goal + '  ⏱' + Math.max(0, Math.ceil(S.time)));
+  if (S.t < 6) G.hint('👆 ⤴️   👆👆 🔄');
 }
 G.modes.skate = { start, update, draw, debug: () => S, press(k) { if (k === 'act') jump(); }, tap() { jump(); }, repeat() { if (S.target) G.sayNow('sw_' + S.target.toLowerCase()); } };
 })();

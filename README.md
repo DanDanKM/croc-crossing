@@ -41,3 +41,18 @@ Plain HTML, canvas and JavaScript, with no build step.
 Without clips, the device's own voice is used. Test locally with `tools/Serve-Local.ps1` (http://localhost:8766/).
 
 Larrakia and Kriol names stay hidden until they've been checked with someone local (⚙️ setting).
+
+## v4 additions
+
+- **Kid-first:** icon hints, short cards and a big ▶. The narrator carries the instructions, so no adult is needed. Each place is about 70% play: 3 quick hops, 2 bonus games and 1 quiz.
+- **Maths:** counting, adding, taking away, more/less and patterns.
+- **🤖 Robo-Croc code:** arrow paths, loops, fix the bug, and teach the robot (AI basics: robots learn from the examples we give them).
+- **Keil Maritime:** 📋 Dad's boat check (Pegasus V, a sailing catamaran, Mackerel), ⛵ design a boat (balance maths), and the Cairns (new office) and Fremantle stops.
+- **Family:** family members host the bonus games, with Pickles the dog as a buddy, 🥚 the chooks and Mr Spangles, and Tagalog words from Lola Lou.
+- **🌙 Night fishing** on the banana boat: fill 5 moons to unlock squid jigging and big barra.
+- **Music:** original backing tracks made with ElevenLabs Music (`tools/Make-Music.ps1`), quietly ducked under the voice, with a 🎵 toggle.
+- **✈️ Plane mode:**
+  - 🔊/🔇 quiet mode shows every spoken line as a caption, with no sound.
+  - "1 hour" play limit.
+  - The grown-ups page has a "Plane ready?" check plus Download all for offline use.
+- **Larrakia names:** these stay in a local-only file (`larrakia.local.js`, gitignored) until Larrakia Nation gives consent to publish them.

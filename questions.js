@@ -79,15 +79,41 @@ Object.assign(F, {
     return { hud: { emoji: '🎨', text: iw }, steps: [{ answers: mix({ col: c[1] }, cw.map(x => ({ col: x[1] }))), say: ['id_colour', 'idw_' + slug(iw)], okSay: ['idw_' + slug(iw), 'w_' + c[0], 'id_great'], skill: 'I:' + iw }] };
   }
 });
-const PLAN = [['first', 'spell', 'sight', 'rhyme', 'first'], ['first', 'spell', 'claps', 'rhyme', 'sentence'], ['spell', 'sentence', 'plural', 'claps', 'sight']];
+/* ---------- numbers and maths ---------- */
+const N = n => ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][n];
+const numAns = (n, max, k = 5) => shuffle([n, ...shuffle([...Array(max + 1).keys()].filter(m => m !== n && m > 0)).slice(0, k - 1)]).map(m => ({ t: String(m), ok: m === n }));
+const emo = stop => pick(stop.animals.filter(a => a.home !== 'plant')).emoji;
+Object.assign(F, {
+  count(stop, idx) {
+    const n = G.ri(3, Math.min(10, 5 + idx)), e = emo(stop);
+    return { hud: { emoji: e.repeat(n).length > 20 ? e + '×?' : e.repeat(n), text: '' }, steps: [{ answers: numAns(n, 10), say: ['m_how'], okSay: ['n_' + n, 'm_good'], skill: 'N:count ' + n }] };
+  },
+  add(stop, idx) {
+    const max = idx < 3 ? 5 : 10, a = G.ri(1, max - 1), b = G.ri(1, Math.min(4, max - a)), e = emo(stop);
+    return { hud: { emoji: '', text: e.repeat(a) + ' + ' + e.repeat(b) + ' = ?' }, steps: [{ answers: numAns(a + b, max), say: ['n_' + a, 'm_plus', 'n_' + b, 'm_makes'], okSay: ['n_' + (a + b), 'm_good'], skill: 'N:' + a + '+' + b }] };
+  },
+  take(stop) {
+    const a = G.ri(3, 6), b = G.ri(1, a - 1), e = emo(stop);
+    return { hud: { emoji: '', text: e.repeat(a) + ' − ' + '❌'.repeat(b) + ' = ?' }, steps: [{ answers: numAns(a - b, 6), say: ['n_' + a, 'm_take', 'n_' + b, 'm_left'], okSay: ['n_' + (a - b), 'm_good'], skill: 'N:' + a + '-' + b }] };
+  },
+  more(stop) {
+    const e = emo(stop), ns = shuffle([1, 2, 3, 4, 5, 6]).slice(0, 5), big = Math.max(...ns);
+    return { hud: { emoji: '⚖️', text: 'more?' }, steps: [{ answers: ns.map(n => ({ e: e.repeat(n), t: '', ok: n === big })), say: ['m_more'], okSay: ['n_' + big, 'm_good'], skill: 'N:more' }] };
+  },
+  pattern(stop) {
+    const as = shuffle(stop.animals).slice(0, 2).map(a => a.emoji), seq = [0, 1, 0, 1, 0], ans = as[1];
+    const wrong = shuffle(G.allAnimals().map(a => a.emoji).filter(x => !as.includes(x))).filter((x, i, a) => a.indexOf(x) === i).slice(0, 3);
+    return { hud: { emoji: '', text: seq.map(i => as[i]).join(' ') + ' ?' }, steps: [{ answers: mix({ e: ans }, [{ e: as[0] }, ...wrong.map(e => ({ e }))]), say: ['m_next'], okSay: ['m_good'], skill: 'N:pattern' }] };
+  }
+});
+const LIT = [['first', 'first'], ['first', 'spell'], ['spell', 'rhyme'], ['spell', 'sight'], ['sentence', 'claps'], ['spell', 'plural'], ['sentence', 'describe']];
+const MATHS = [['count'], ['count', 'more'], ['add', 'pattern'], ['add', 'more'], ['add', 'take'], ['add', 'pattern'], ['take', 'add']];
 G.Q = {
-  felixSet(stop, idx) {
-    let plan = PLAN[idx] || ['spell', 'sentence', ...shuffle(['plural', 'describe', 'rhyme', 'claps', 'sight', 'first']).slice(0, 3)];
-    if (idx >= 3) plan = shuffle(plan);
-    plan = [...plan];
-    plan.splice(G.ri(1, plan.length), 0, ['indoAnimal', 'indoNumber', 'indoColour'][idx % 3]);
-    if (stop.country === 'Indonesia') plan.push('indoAnimal');
-    return plan.map(k => ({ ...F[k](stop), kind: k }));
+  felixSet(stop, idx) { // 3 quick hops: one literacy, one maths, one rotating (literacy / Indonesian)
+    const lit = LIT[Math.min(idx, LIT.length - 1)], ma = MATHS[Math.min(idx, MATHS.length - 1)];
+    const third = idx % 2 ? ['indoAnimal', 'indoNumber', 'indoColour'][Math.floor(idx / 2) % 3] : lit[1];
+    const plan = shuffle([lit[0], pick(ma), third]);
+    return plan.map(k => ({ ...F[k](stop, idx), kind: k }));
   },
   quizSet(stop, idx) {
     const pool = vis(idx), out = [];
@@ -104,7 +130,7 @@ G.Q = {
       const f = C.flags.find(f => f[0] === stop.country), wrong = C.flags.filter(x => x !== f);
       out.push({ kind: 'geo', hud: { emoji: '🗺️', text: 'Find the flag of ' + stop.country }, steps: [{ answers: mix({ e: f[1], t: '' }, wrong.map(x => ({ e: x[1], t: '' }))), say: [stop.country === 'Australia' ? 'geo_au' : 'geo_' + stop.id], okSay: ['w_' + f[0].toLowerCase()], skill: 'F:' + f[0] }] });
     }
-    return out;
+    return shuffle(out).slice(0, 1);
   },
   remiSet(stop, idx) {
     const out = [], anims = shuffle(stop.animals);
@@ -118,7 +144,7 @@ G.Q = {
     const s = anims.find(x => x.sound) || anims[2 % anims.length];
     out.push({ kind: s.sound ? 'sound' : 'find', hud: { emoji: s.sound ? '👂' : '🔎', text: '' },
       steps: [{ answers: mix({ e: s.emoji }, otherAnimals(s, 2).map(x => ({ e: x.emoji }))), say: [s.sound ? 'snd_' + s.id : 'rf_' + s.id], okSay: ['nm_' + s.id], skill: 'A:' + s.word }] });
-    return shuffle(out);
+    return shuffle(out).slice(0, 3);
   }
 };
 })();

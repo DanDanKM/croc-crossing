@@ -81,7 +81,7 @@ function draw() {
   G.drawKid(W / 2 - 230, 640, 1.2);
   txt(G.buddyEmoji(), W / 2 + 230, 640 + Math.sin(S.t * 6) * 6, 64, '#000');
   G.hudBar('🥁 Clap-along', S.phase === 'count' ? '🇮🇩' : (S.wi + 1 > S.list.length ? S.list.length : S.wi + 1) + '/' + S.list.length);
-  const h = { listen: 'Listen to the beats…', tap: 'Tap the drum for each beat!', count: 'Tap the drum for each number!' }[S.phase]; if (h) G.hint(h);
+  const h = { listen: '👂 🥁', tap: '👆 🥁', count: '👆 🥁 🇮🇩' }[S.phase]; if (h) G.hint(h);
 }
 G.modes.clap = { start, update, draw, tap, debug: () => S, press(k) { if (k === 'act') tap({ x: DX, y: DY }); }, repeat() { if (S.phase === 'tap' || S.phase === 'listen') G.sayNow('w_' + word()); } };
 })();

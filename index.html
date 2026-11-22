@@ -30,7 +30,7 @@
   #pad .act { width:140px; height:126px; font-size:56px; border-radius:30px; background:#ffb36b; }
   #topbtns { display:flex; gap:8px; }
   #topbtns.hidden { display:flex !important; visibility:hidden; }
-  #topbtns button { font:inherit; font-size:17px; padding:4px 14px; border:0; border-radius:12px; background:#ffffffcc; }
+  #topbtns button { font:inherit; font-size:26px; padding:2px 16px; border:0; border-radius:12px; background:#ffffffcc; }
   .overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#0008; border-radius:14px; }
   .hidden { display:none !important; }
   .card { background:var(--panel); border-radius:22px; padding:22px 26px; width:min(90%,540px); max-height:92%; overflow:auto; text-align:center; box-shadow:0 10px 0 #0004; }
@@ -66,7 +66,7 @@
 </head>
 <body>
 <div id="wrap">
-  <div id="topbtns" class="hidden"><button id="menuBtn">👤 Players</button><button id="mapBtn">🗺️ Map</button><button id="guideBtn">📒 Guide</button><button id="sanctBtn">🏞️ Sanctuary</button><button id="gamesBtn">🎮 Games</button><button id="setBtn">⚙️</button></div>
+  <div id="topbtns" class="hidden"><button id="menuBtn">👤</button><button id="mapBtn">🗺️</button><button id="guideBtn">📒</button><button id="sanctBtn">🏞️</button><button id="gamesBtn">🎮</button><button id="quietBtn">🔊</button><button id="musicBtn">🎵</button><button id="setBtn">⚙️</button></div>
   <div id="stage">
     <canvas id="game" width="704" height="832"></canvas>
 
@@ -110,8 +110,10 @@
         <h2>⚙️ Grown-ups</h2>
         <div id="lockBox"><p id="lockQ"></p><input id="lockA" type="number" inputmode="numeric" style="width:120px"> <button class="btn small" id="lockGo">OK</button></div>
         <div id="setBox" class="hidden">
-          <div class="row">Play time limit <select id="setLimit"><option value="10">10 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="0">No limit</option></select></div>
-          <div class="row">Show Larrakia / Kriol names (checked ones only) <input type="checkbox" id="setCulture"></div>
+          <div class="row">Play time limit <select id="setLimit"><option value="10">10 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">1 hour ✈️</option><option value="0">No limit</option></select></div>
+          <div class="row">Show Larrakia names (needs the local word file) <input type="checkbox" id="setCulture"></div>
+          <div class="row">Music <input type="checkbox" id="setMusic"></div>
+          <div class="row">✈️ Plane ready? <span id="offlineState" class="small"></span><button class="btn small blue" id="setOffline">Download all</button></div>
           <div class="row">Season <select id="setSeason"><option value="auto">Today's date</option><option value="build">⛈️ Build-up</option><option value="wet">🌧️ The Wet</option><option value="runoff">🌊 Run-off</option><option value="knock">🌾 Knock 'em down</option><option value="cool">🌤️ Cool dry time</option><option value="hot">☀️ Hot dry time</option></select></div>
           <div class="row"><span id="playedFor"></span><button class="btn small" id="setReset">Reset timer</button></div>
           <h3 style="margin:8px 0 2px;text-align:left">Progress</h3><div id="report"></div>
@@ -130,6 +132,7 @@
 </div>
 <script src="content.js"></script>
 <script src="lines.js"></script>
+<script src="larrakia.local.js"></script>
 <script src="core.js"></script>
 <script src="questions.js"></script>
 <script src="hop.js"></script>
@@ -144,14 +147,17 @@
 <script src="hacky.js"></script>
 <script src="judo.js"></script>
 <script src="clap.js"></script>
+<script src="code.js"></script>
+<script src="check.js"></script>
+<script src="design.js"></script>
+<script src="eggs.js"></script>
 <script>
 G.boot();
 // offline: register the service worker, then quietly cache every voice clip once (so it works in the car)
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('sw.js').then(() => navigator.serviceWorker.ready).then(async () => {
     try { if (localStorage.getItem('croc2-voices-cached') === (window.LINES ? Object.keys(LINES).length + '' : '')) return; } catch (e) {}
-    const keys = await fetch('voice/index.json').then(r => r.json()).catch(() => []);
-    for (let i = 0; i < keys.length; i += 6) await Promise.all(keys.slice(i, i + 6).map(k => fetch('voice/' + encodeURIComponent(k) + '.mp3').catch(() => {})));
+    await G.downloadAll();
     try { localStorage.setItem('croc2-voices-cached', Object.keys(LINES).length + ''); } catch (e) {}
   }).catch(() => {});
 }

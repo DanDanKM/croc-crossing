@@ -105,7 +105,7 @@ function draw() {
   txt('🍌', x0 - 30, T / 2, 30, '#fff');
   for (let i = 0; i < w.length; i++) { const bx = x0 + i * bw; rr(bx, 10, bw - 6, T - 20, 8, i < S.li ? '#3fa34d' : i === S.li ? '#ffe14d' : '#ffffff22'); txt(w[i], bx + (bw - 6) / 2, T / 2 + 2, 26, i === S.li ? '#1d2a24' : '#fff'); }
   txt('🐚' + S.shells + (S.remi ? '' : '  ⏱' + Math.max(0, Math.ceil(S.time))), W - 70, T / 2, 18, '#fff', 'right', 700);
-  if (S.t < 6) G.hint('Steer with ⬅️ ➡️ or drag · get the letters in order');
+  if (S.t < 6) G.hint('⬅️ ➡️  🅰️ 🅱️ 🆎');
 }
 G.modes.boat = {
   start, update, draw, debug: () => S,

@@ -5,6 +5,7 @@ param(
   [string]$VoiceId = 'NihRgaLj2HWAjvZ5XNxl',      # Matilda - Australian storyteller (picked 22/11)
   [string]$CrocVoiceId = '2EiwWnXFnvU5JabPnv8n',  # Clyde - gravelly croc character
   [string]$IndoVoiceId = 'gjhfBUoH6DHh0DG1X4u0', # Gavrila - Indonesian words (idw_*)
+  [string]$TagalogVoiceId = 'mOYuoC0AAGM3erLKflvc', # Nanay Pilar - Lola Lou's Tagalog words (tlw_*)
   [string]$Model = 'eleven_multilingual_v2',
   [string]$IndoModel = 'eleven_turbo_v2_5',
   [switch]$Force
@@ -28,15 +29,16 @@ $keys = @($lines.PSObject.Properties.Name)
 $made = 0; $kept = 0; $failed = 0
 foreach ($k in $keys) {
   $text = $lines.$k
-  $indo = $k -like 'idw_*'
-  $vid = if ($indo) { $IndoVoiceId } elseif ($crocKeys -contains $k) { $CrocVoiceId } else { $VoiceId }
+  $tl = $k -like 'tlw_*'
+  $indo = $k -like 'idw_*' -or $tl
+  $vid = if ($tl) { $TagalogVoiceId } elseif ($indo) { $IndoVoiceId } elseif ($crocKeys -contains $k) { $CrocVoiceId } else { $VoiceId }
   $mdl = if ($indo) { $IndoModel } else { $Model }
   $sig = "$vid|$mdl|v2|$text"
   $file = Join-Path $dir "$k.mp3"
   if (-not $Force -and (Test-Path $file) -and $man[$k] -eq $sig) { $kept++; continue }
   $stab = if ($k -like 'w_*' -or $k -like 'l_*' -or $indo) { 0.7 } else { 0.55 }
   $b = @{ text = $text; model_id = $mdl; voice_settings = @{ stability = $stab; similarity_boost = 0.8; style = 0.2; speed = 0.9; use_speaker_boost = $true } }
-  if ($indo) { $b.language_code = 'id' }
+  if ($indo) { $b.language_code = if ($tl) { 'fil' } else { 'id' } }
   $body = $b | ConvertTo-Json -Depth 4
   try {
     Invoke-WebRequest -Uri "https://api.elevenlabs.io/v1/text-to-speech/$vid`?output_format=mp3_44100_128" -Method Post `
@@ -53,7 +55,7 @@ foreach ($k in $keys) {
 # drop clips for lines that no longer exist
 $keep = [Collections.Generic.HashSet[string]]::new([string[]]$keys, [StringComparer]::OrdinalIgnoreCase)
 $removed = 0
-Get-ChildItem $dir -Filter *.mp3 | Where-Object { -not $keep.Contains($_.BaseName) } | ForEach-Object { Remove-Item $_.FullName; $man.Remove($_.BaseName); $removed++ }
+Get-ChildItem $dir -Filter *.mp3 | Where-Object { -not $keep.Contains($_.BaseName) -and $_.BaseName -notlike 'lk_*' } | ForEach-Object { Remove-Item $_.FullName; $man.Remove($_.BaseName); $removed++ }
 $have = Get-ChildItem $dir -Filter *.mp3 | ForEach-Object { $_.BaseName } | Sort-Object
 $utf8 = New-Object Text.UTF8Encoding $false
 [IO.File]::WriteAllText((Join-Path $dir 'index.json'), (ConvertTo-Json @($have) -Compress), $utf8)

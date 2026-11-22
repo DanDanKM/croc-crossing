@@ -292,8 +292,8 @@ function drawHud() {
       x += w + 6 * sc;
     });
   } else {
-    txt(hud.emoji, W / 2 - (hud.text ? 150 : 0), T / 2, 36, '#fff');
-    if (hud.text) fitTxt(hud.text, W / 2 + 40, T / 2 + 2, 380, 26, '#ffe14d');
+    if (hud.emoji) txt(hud.emoji, W / 2 - (hud.text ? 150 : 0), T / 2, 36, '#fff');
+    if (hud.text) fitTxt(hud.text, hud.emoji ? W / 2 + 40 : W / 2, T / 2 + 2, hud.emoji ? 380 : W - 200, 26, '#ffe14d');
   }
 }
 
@@ -305,7 +305,7 @@ const mode = G.modes.hop = {
     G.setPad(q ? 'arrows' : 'none');
     if (q) { G.preload(q.steps.flatMap(s => [...s.say, ...s.okSay]), q.doneSay || []); setStep(); } else P = null;
   },
-  update, draw, animateUnderCards: true,
+  update, draw, animateUnderCards: true, music: () => (S && S.stop && S.stop.music) || 'game',
   press(k) { if (k !== 'act') { S.auto = null; hop(k); } },
   swipe(d) { if (!S.remi) hop(d); },
   tap(p) {

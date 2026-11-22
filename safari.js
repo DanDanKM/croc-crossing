@@ -104,7 +104,7 @@ function draw() {
   G.drawWeather(S.t);
   if (S.view) { const { x, y } = S.view; g.strokeStyle = '#fff'; g.lineWidth = 4; for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { g.beginPath(); g.moveTo(x + sx * 50, y + sy * 30); g.lineTo(x + sx * 50, y + sy * 50); g.lineTo(x + sx * 30, y + sy * 50); g.stroke(); } }
   if (S.flash > 0) { g.fillStyle = 'rgba(255,255,255,' + S.flash * 1.6 + ')'; g.fillRect(0, 0, W, H); }
-  G.hudBar(S.remi ? '📷 Tap the animals!' : 'Snap the: ' + S.target.word.toUpperCase(), '📷 ' + S.shots + '/' + S.goal + (S.remi ? '' : '  ⏱' + Math.max(0, Math.ceil(S.time))));
+  G.hudBar(S.remi ? '📷 👆' : '📷 ' + S.target.word.toUpperCase(), '📷 ' + S.shots + '/' + S.goal + (S.remi ? '' : '  ⏱' + Math.max(0, Math.ceil(S.time))));
 }
 function drawPop(p) {
   const [x, y] = popXY(p), h = popH(p);

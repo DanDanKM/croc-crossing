@@ -65,8 +65,8 @@ function draw() {
   circle(S.bx, S.by, 18, '#3fa34d'); g.strokeStyle = '#ffd23f'; g.lineWidth = 3; g.beginPath(); g.arc(S.bx, S.by, 12, 0, Math.PI); g.stroke();
   // count
   if (S.count) { txt(String(S.count), W / 2, 220, 90, '#fff'); fitTxt(S.round === 0 ? C.count10.en[S.count - 1] : C.count10.id[S.count - 1], W / 2, 290, 400, 40, S.round === 0 ? '#1d2a24' : '#c0392b'); }
-  G.hudBar(S.round === 0 ? '🦶 Count in English' : '🇮🇩 Count in Indonesian', (S.round + 1) + '/2');
-  if (S.t < 6) G.hint(S.remi ? 'Tap 🦶 when the sack comes down!' : 'Move ⬅️ ➡️ · tap 🦶 when the sack drops to your foot');
+  G.hudBar(S.round === 0 ? '🦶 1 2 3' : '🦶 🇮🇩 satu dua tiga', (S.round + 1) + '/2');
+  if (S.t < 6) G.hint(S.remi ? '👆 🦶' : '⬅️ ➡️   👆 🦶');
 }
 G.modes.hacky = { start, update, draw, debug: () => S, press(k) { if (k === 'act') kick(); }, tap() { kick(); }, pdown(p) { if (!S.remi && p.y > FOOT - 200) S.tx = p.x; }, repeat() { G.sayNow('h_intro'); } };
 })();

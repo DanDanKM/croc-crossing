@@ -99,7 +99,7 @@ function draw() {
   for (let i = 0; i < w.length; i++) { const bx = x0 + i * bw; rr(bx, 10, bw - 6, T - 20, 8, i < S.li ? '#3fa34d' : i === S.li ? '#ffe14d' : '#ffffff22'); txt(w[i], bx + (bw - 6) / 2, T / 2 + 2, 26, i === S.li ? '#1d2a24' : '#fff'); }
   txt('⭐' + S.stars + '  ⏱' + Math.max(0, Math.ceil(S.time)), W - 70, T / 2, 20, '#fff', 'right', 700);
   txt('🔊', W - 36, T / 2, 30, '#fff');
-  if (S.t < 6) { rr(W / 2 - 250, T + 12, 500, 40, 14, '#00000066'); txt('Drag up & down · tap to jump at the top', W / 2, T + 33, 20, '#fff', 'center', 700); }
+  if (S.t < 6) G.hint('⬆️ ⬇️   👆 ⤴️');
 }
 G.modes.surf = {
   start, update, draw,

@@ -78,8 +78,8 @@ function draw() {
     rr(x, y, 92, 56, 12, sel ? '#ffe14d' : can ? '#e8f6e0' : '#eee'); txt(it[1], x + 28, y + 28, 30, '#000'); txt(it[3] + '🐚', x + 68, y + 30, 15, can ? '#1d2a24' : '#999', 'center', 700);
   });
   G.hudBar('🏞️ ' + G.player + "'s Sanctuary", '🐚 ' + (G.prog.shells || 0));
-  if (S.placing) G.hint('Tap a spot for your ' + S.placing[2] + '!');
-  else if (S.t < 5) G.hint('Tap an animal · buy things with your shells');
+  if (S.placing) G.hint('👆 ' + S.placing[1] + ' ⬇️');
+  else if (S.t < 5) G.hint('👆 🦘   🐚 ➡️ 🌴');
 }
-G.modes.sanct = { start, update, draw, tap, animateUnderCards: true, debug: () => S, repeat() { G.sayNow('sa_intro'); } };
+G.modes.sanct = { start, update, draw, tap, animateUnderCards: true, music: 'map', debug: () => S, repeat() { G.sayNow('sa_intro'); } };
 })();

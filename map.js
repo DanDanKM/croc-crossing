@@ -10,7 +10,7 @@ const TIMOR = [[123.5,-10.3],[124.5,-9.6],[125.5,-9.0],[127.0,-8.4],[127.3,-8.5]
 const ISLES = [[118.0,-8.6,1.4,.35],[121.0,-8.6,1.8,.35],[116.3,-8.6,.4,.3],[119.9,-9.7,.9,.3],[130.6,-11.6,.9,.35],[136.6,-14,.35,.3],[126.4,-3.3,.9,.4],[129.5,-3.2,1.6,.4],[134.5,-6.2,.6,.6],[131.3,-7.6,.4,.6]];
 const LABELS = [['AUSTRALIA',133,-17.5,22],['PAPUA NEW GUINEA',143.5,-5.6,15],['TIMOR-LESTE',126.5,-7.7,13],['INDONESIA',121,-6.8,15],['Arafura Sea',134,-9.6,13],['Timor Sea',125,-11.8,13],['Coral Sea',148,-13.5,13]];
 let sel = 0, t = 0, behindMenu = false;
-const stopXY = s => px(s.lon, s.lat);
+const stopXY = s => px(s.mx || s.lon, s.my || s.lat);
 const unlocked = () => (G.prog ? G.prog.unlocked : 0);
 
 function poly(pts, fill) { g.beginPath(); pts.forEach(([lo, la], i) => { const [x, y] = px(lo, la); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.closePath(); g.fillStyle = fill; g.fill(); g.strokeStyle = '#c9a75c'; g.lineWidth = 2; g.stroke(); }
@@ -30,6 +30,7 @@ function draw() {
   // pins
   C.stops.forEach((s, i) => {
     const [x, y] = stopXY(s), open = i <= unlocked(), isSel = i === sel;
+    if (s.mx) txt('✈️', x - 26, y - 22, 18, '#000');
     if (isSel) { g.strokeStyle = '#ffe14d'; g.lineWidth = 4; g.beginPath(); g.arc(x, y, 24 + Math.sin(t * 5) * 3, 0, Math.PI * 2); g.stroke(); }
     circle(x, y, 19, open ? '#fff' : '#ffffff66');
     txt(open ? s.animals[0].emoji : '🔒', x, y + 1, 20, '#000');
@@ -43,8 +44,8 @@ function draw() {
   g.fillStyle = '#123b2c'; g.fillRect(0, 0, W, T);
   const se = G.season();
   rr(8, 10, 168, T - 20, 12, se.sky); fitTxt(se.emoji + ' ' + se.name, 92, T / 2 + 1, 156, 18, '#1d2a24');
-  txt(G.coop ? '👫 Team Felix + Remi' : '🗺️ Top End Adventure', W / 2 + 10, T / 2, G.coop ? 22 : 24, '#ffe14d');
-  if (G.prog && !G.coop) txt('🐚 ' + (G.prog.shells || 0), W - 78, T / 2, 20, '#fff', 'right', 700);
+  txt(G.coop ? '👫 Felix + Remi' : G.player === 'Remi' ? '🗺️ Remi' : '🗺️ Felix', W / 2 - 10, T / 2, 24, '#ffe14d');
+  if (G.prog && !G.coop) { const mo = Math.floor(G.prog.moons || 0); txt('🐚' + (G.prog.shells || 0), W - 74, T / 2 - 12, 16, '#fff', 'right', 700); txt('🌙'.repeat(mo) + '○'.repeat(G.MOONS - mo), W - 74, T / 2 + 12, mo >= G.MOONS ? 16 : 13, mo >= G.MOONS ? '#ffe14d' : '#fff', 'right', 700); }
   txt('🔊', W - 36, T / 2, 30, '#fff');
   // stop panel
   const s = C.stops[sel], open = sel <= unlocked(), py = 440;
@@ -68,11 +69,12 @@ const bonusLabel = s => G.isRemi() || G.coop ? '' : 'Bonus game: ' + C.games[s.b
 G.modes.map = {
   start(menu) { behindMenu = !!menu; sel = Math.min(unlocked(), C.stops.length - 1); G.setPad('none'); if (!menu && G.prog) G.say('map'); },
   update(dt) { t += dt; },
-  draw, animateUnderCards: true,
+  draw, animateUnderCards: true, music: 'map',
   tap(p) {
     for (let i = 0; i < C.stops.length; i++) { const [x, y] = stopXY(C.stops[i]); if (Math.hypot(p.x - x, p.y - y) < 30) { sel = i; G.sfx('hop'); if (i <= unlocked()) G.sayNow('st_' + C.stops[i].id); return; } }
     if (sel <= unlocked() && p.y > 440 + 230 && p.y < 440 + 306 && Math.abs(p.x - W / 2) < 140) { G.stopVoice(); G.startStop(sel); }
     if (p.y < T && p.x < 180) G.sayNow('ss_' + G.season().id);
+    if (p.y < T && p.x > W - 200 && p.x < W - 70 && G.prog) G.tryNight();
   },
   repeat() { G.sayNow('map'); }
 };
