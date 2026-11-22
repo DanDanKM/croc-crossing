@@ -18,7 +18,7 @@ window.CONTENT = {
    {"id":"mangrove","word":"mangrove","name":"Mangrove tree","emoji":"🌳","home":"plant","adj":"green",
     "fact":"Mangrove trees grow in salty water. Their tangled roots are a safe home for baby fish.","clue":"Which tree grows in salty water?"}
   ]},
- {"id":"kakadu","name":"Kakadu","country":"Australia","flag":"🇦🇺","lon":133.0,"lat":-13.3,"theme":"wetland","bonus":"car",
+ {"id":"kakadu","name":"Kakadu","country":"Australia","flag":"🇦🇺","lon":133.0,"lat":-13.3,"theme":"wetland","bonus":"safari",
   "intro":"This is Kakadu, with its big wetlands and billabongs. Let's explore!",
   "spell":["HOP","LOG","EGG","BUG"],
   "sentences":[["A","wallaby","can","hop"],["The","lily","is","pink"],["We","see","a","big","bird"]],
@@ -34,7 +34,7 @@ window.CONTENT = {
    {"id":"lily","word":"lily","name":"Waterlily","emoji":"🪷","home":"plant","adj":"pretty",
     "fact":"Waterlilies float on the billabong. Their flowers open up in the morning sun.","clue":"Which flower floats on the billabong?"}
   ]},
- {"id":"tiwi","name":"Tiwi Islands","country":"Australia","flag":"🇦🇺","lon":130.5,"lat":-11.0,"theme":"beach","bonus":"surfing",
+ {"id":"tiwi","name":"Tiwi Islands","country":"Australia","flag":"🇦🇺","lon":130.5,"lat":-11.0,"theme":"beach","bonus":"boat",
   "intro":"We sailed to the Tiwi Islands! White sand, blue sea, and lots of sea creatures.",
   "spell":["SEA","FIN","SAND"],
   "sentences":[["The","turtle","is","slow"],["I","like","the","sea"],["The","shark","can","swim"]],
@@ -48,7 +48,7 @@ window.CONTENT = {
    {"id":"shark","word":"shark","name":"Reef shark","emoji":"🦈","home":"sea","adj":"fast",
     "fact":"Sharks were swimming in the sea before the dinosaurs were even born!","clue":"Which fish was around before the dinosaurs?"}
   ]},
- {"id":"arnhem","name":"Arnhem Land","country":"Australia","flag":"🇦🇺","lon":136.8,"lat":-12.3,"theme":"bush","bonus":"fishing",
+ {"id":"arnhem","name":"Arnhem Land","country":"Australia","flag":"🇦🇺","lon":136.8,"lat":-12.3,"theme":"bush","bonus":"hacky",
   "intro":"Welcome to Arnhem Land, where the bush meets the sea.",
   "spell":["DOG","ANT","NEST"],
   "sentences":[["The","dingo","is","wild"],["An","echidna","is","spiky"],["I","can","hear","a","bird"]],
@@ -92,7 +92,7 @@ window.CONTENT = {
    {"id":"whale","word":"whale","name":"Humpback whale","emoji":"🐋","home":"sea","adj":"huge","sound":"a long sea song",
     "fact":"Humpback whales sing long songs under the sea, and they jump right out of the water!","clue":"Which giant sea animal sings songs?"}
   ]},
- {"id":"timor","name":"Timor-Leste","country":"Timor-Leste","flag":"🇹🇱","lon":125.6,"lat":-8.7,"theme":"mountain","bonus":"fishing",
+ {"id":"timor","name":"Timor-Leste","country":"Timor-Leste","flag":"🇹🇱","lon":125.6,"lat":-8.7,"theme":"mountain","bonus":"judo",
   "intro":"Hello Timor-Leste! This is our close neighbour, across the Timor Sea.",
   "spell":["MUD","BEAN","BOAT"],
   "sentences":[["The","buffalo","is","muddy"],["We","go","on","a","boat"]],
@@ -106,7 +106,7 @@ window.CONTENT = {
    {"id":"buffalo","word":"buffalo","name":"Water buffalo","emoji":"🐃","home":"land","adj":"muddy",
     "fact":"Water buffalo help farmers in the fields, and they love to wallow in the mud.","clue":"Which animal loves to wallow in the mud?"}
   ]},
- {"id":"indonesia","name":"Komodo, Indonesia","country":"Indonesia","flag":"🇮🇩","lon":119.5,"lat":-8.6,"theme":"island","bonus":"surfing",
+ {"id":"indonesia","name":"Komodo, Indonesia","country":"Indonesia","flag":"🇮🇩","lon":119.5,"lat":-8.6,"theme":"island","bonus":"skate",
   "intro":"Welcome to Indonesia! It has more than seventeen thousand islands.",
   "spell":["RICE","HOT","LAVA"],
   "sentences":[["The","volcano","is","hot"],["I","like","to","eat","rice"]],
@@ -120,7 +120,7 @@ window.CONTENT = {
    {"id":"volcano","word":"volcano","name":"Volcano","emoji":"🌋","home":"land","adj":"hot",
     "fact":"Indonesia has lots of volcanoes. Some of them still puff out smoke!","clue":"Which mountain can puff out smoke?"}
   ]},
- {"id":"png","name":"Papua New Guinea","country":"Papua New Guinea","flag":"🇵🇬","lon":147.2,"lat":-9.4,"theme":"rainforest","bonus":"car",
+ {"id":"png","name":"Papua New Guinea","country":"Papua New Guinea","flag":"🇵🇬","lon":147.2,"lat":-9.4,"theme":"rainforest","bonus":"bmx",
   "intro":"Welcome to Papua New Guinea, our closest neighbour to the north, full of rainforest.",
   "spell":["NEST","WING","TREE"],
   "sentences":[["The","bird","can","dance"],["A","kangaroo","is","in","the","tree"]],
@@ -137,6 +137,25 @@ window.CONTENT = {
 ],
 "homes": {"sea":"Which one lives in the sea?","river":"Which one lives in the river?","land":"Which one lives on the land?","sky":"Which one flies in the sky?","plant":"Which one is a plant?","tree":"Which one lives up in the trees?"},
 "flags": [["Australia","🇦🇺"],["Indonesia","🇮🇩"],["Papua New Guinea","🇵🇬"],["Timor-Leste","🇹🇱"],["New Zealand","🇳🇿"]],
+"seasons": [
+ {"id":"build","name":"Build-up","months":[10,11],"emoji":"⛈️","sky":"#e9a05a","fact":"It's the Build-up! It gets hot and sticky, big clouds build up every afternoon, and the mangoes go ripe.",
+  "surprise":[["🥭","Mango","Mangoes go ripe in the Build-up. Sticky, sweet and yummy!"],["🐸","Green tree frog","Green tree frogs start calling before the first big rains. Croak, croak!"],["⚡","Lightning","Darwin has some of the biggest lightning storms in the world. Count the seconds until the thunder!"]]},
+ {"id":"wet","name":"The Wet","months":[12,1,2],"emoji":"🌧️","sky":"#6f8fa8","fact":"It's the Wet season! Monsoon rain fills the rivers and the whole Top End turns bright green.",
+  "surprise":[["🪿","Magpie goose","Magpie geese build floating nests in the flooded grass in the Wet."],["🐸","Frog chorus","After a big rain, hundreds of frogs sing together all night long!"],["🦋","Butterflies","Lots of butterflies hatch when the rain makes new leaves grow."]]},
+ {"id":"runoff","name":"Run-off","months":[3],"emoji":"🌊","sky":"#7fa7c0","fact":"It's Run-off time! The floodwater drains off the plains into the rivers and out to sea.",
+  "surprise":[["🐟","Barramundi run","Barramundi swim down the rivers with the run-off water. Fishers love this time!"],["🌊","Waterfalls","The waterfalls in Kakadu and Litchfield are at their biggest and loudest."],["🐊","Croc on the move","Crocs move around in the floodwater, so we stay well away from the edge."]]},
+ {"id":"knock","name":"Knock 'em down","months":[4],"emoji":"🌾","sky":"#c7a76a","fact":"It's Knock 'em down season! The last wild storms blow in and knock down the tall spear grass.",
+  "surprise":[["🌾","Spear grass","Spear grass grows taller than a grown-up, then the storms knock it flat."],["🦗","Dragonflies","Clouds of dragonflies come out. Some people say they mean the rain is nearly finished."],["🦘","Wallaby joeys","Wallaby joeys peek out of the pouch as the grass dries out."]]},
+ {"id":"cool","name":"Cool dry time","months":[5,6,7],"emoji":"🌤️","sky":"#7cc6f2","fact":"It's the cool dry time! Clear blue skies, cool mornings, and perfect weather for camping.",
+  "surprise":[["🐢","Turtle hatchlings","Baby flatback turtles hatch on the beach and race down to the sea!"],["🌸","Kapok flowers","Kapok trees lose their leaves and grow bright yellow flowers."],["🏕️","Camping","It's the best time to go camping and sleep under the stars."]]},
+ {"id":"hot","name":"Hot dry time","months":[8,9],"emoji":"☀️","sky":"#f2b35a","fact":"It's the hot dry time! The billabongs shrink, and lots of birds and animals crowd around the water.",
+  "surprise":[["🐦","Jabiru","Jabirus and egrets crowd around the shrinking billabongs to catch fish."],["🐊","Crocs sunbaking","Crocs lie in the sun on the riverbanks to warm up."],["🔥","Cool burns","Rangers light small cool fires early in the dry to keep the bush healthy."]]}
+],
+"shop": [["lily","🪷","waterlily",2],["shell","🐚","shell",2],["flower","🌺","flower",2],["rock","🪨","rock",2],["sunflower","🌻","sunflower",3],["palm","🌴","palm tree",3],["tree","🌳","tree",3],["nest","🪺","nest",4],["log","🪵","log",4],["tent","⛺","tent",5],["canoe","🛶","canoe",6],["hut","🛖","hut",7],["house","🏡","house",8],["rainbow","🌈","rainbow",10]],
+"verbs": ["push","pull","spin","jump","roll","lift","run","kick"],
+"beats": {"croc":["croc"],"crab":["crab"],"fish":["fish"],"shark":["shark"],"turtle":["tur","tle"],"dingo":["din","go"],"dolphin":["dol","phin"],"lizard":["liz","ard"],"goanna":["go","an","na"],"wallaby":["wal","la","by"],"kangaroo":["kan","ga","roo"],"octopus":["oc","to","pus"],"jellyfish":["jel","ly","fish"],"crocodile":["croc","o","dile"],"echidna":["e","chid","na"],"cockatoo":["cock","a","too"],"butterfly":["but","ter","fly"],"barramundi":["bar","ra","mun","di"],"kookaburra":["kook","a","bur","ra"],"caterpillar":["cat","er","pil","lar"]},
+"count10": {"en":["one","two","three","four","five","six","seven","eight","nine","ten"],"id":["satu","dua","tiga","empat","lima","enam","tujuh","delapan","sembilan","sepuluh"]},
+"games": {"fishing":["🎣","Barra fishing"],"safari":["📷","Photo safari"],"boat":["🍌","Banana boat UB-19"],"surfing":["🏄","Surfing"],"hacky":["🦶","Hacky sack"],"car":["🚗","Car mission"],"judo":["🥋","Judo"],"skate":["🛹","Skateboard"],"bmx":["🚲","BMX"],"clap":["🥁","Clap-along"]},
 "sight": ["the","and","is","a","I","can","see","we","go","to","my","like","look","in","it","big","on","at","up","yes","no"],
 "rhymes": [
  {"w":"croc","e":"🐊","r":[["sock","🧦"],["rock","🪨"],["clock","🕐"]]},
@@ -210,6 +229,25 @@ window.CONTENT = {
  "c_intro":"Drive to each house, in order, to spell the word. Watch out for crocs on the road!","c_crocroad":"Yikes! A croc on the road!",
  "c_delivered":"Delivered! Ding ding!","c_done":"Mission complete! You're a top driver!","c_timeup":"Time's up! Good try!",
  "break":"Time for a break! Great playing today. Let's have a stretch and a drink of water.",
- "level":"Level complete!"
+ "level":"Level complete!",
+ "daily":"Here's today's Top End surprise!","streak":"You've played day after day. Here are some bonus shells!",
+ "shells":"You earned shells! Spend them in your sanctuary.",
+ "team":"Team time! Felix and Remi, let's play together!","turn_felix":"Felix, your turn!","turn_remi":"Remi, your turn!",
+ "games":"Pick a game to play!",
+ "sa_intro":"Welcome to your animal sanctuary! Every animal you meet comes to live here. Spend your shells to make it beautiful.",
+ "sa_buy":"Where should it go? Tap a spot!","sa_need":"You need more shells. Play a game to earn some!","sa_placed":"Looks great!",
+ "ph_intro":"Photo safari! Tap the animal I ask for to take its photo. Wait till it's right up high for a golden shot!",
+ "ph_remi":"Photo safari! Tap an animal to take its picture!","ph_gold":"Golden shot! Wow!","ph_snap":"Snap! Nice photo!",
+ "ph_wrong":"Oops, that's a different animal.","ph_done":"What a photo album! Your photos are in your field guide.",
+ "b_intro":"All aboard the banana boat, U B nineteen! Steer to the letters in order, and dodge the logs and crocs.",
+ "b_bump":"Bump! Steer around it, skipper.","b_croc":"Oi! Watch where you're going, mate!","b_done":"Back to the boat ramp! Great driving, skipper!",
+ "k_intro":"Skate time! Tap to jump. Listen, and grab the word you hear!","x_intro":"B M X time! Tap to jump. Listen, and grab the word you hear!",
+ "k_trick":"Sick trick!","k_bump":"Whoa! Jump over the bumps!","k_done":"What a session! Rad riding!",
+ "h_intro":"Hacky sack! Tap when the sack drops down to your foot. Let's count the kicks!","h_indo":"Now let's count in Indonesian!",
+ "h_drop":"Oops, it dropped! Start again from one.","h_ten":"Ten kicks! Amazing!","h_done":"Hacky sack champion!",
+ "j_intro":"Judo time! In judo, we always bow to show respect. Tap to bow!","j_time":"Now tap when the arrow is in the green!",
+ "j_ippon":"Ippon! What a throw!","j_miss":"Nearly! Have another go.","j_done":"Great judo! Bow to say thank you.","j_roll":"Roll and land safely!",
+ "ry_intro":"Clap-along! Listen to the beats, then tap the drum the same way.","ry_you":"Your turn!","ry_good":"Perfect beat!",
+ "ry_again":"Let's listen again.","ry_count":"Now let's count in Indonesian! Tap the drum for each number.","ry_done":"You've got rhythm!"
 }
 };

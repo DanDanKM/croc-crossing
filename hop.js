@@ -4,7 +4,7 @@
 (() => {
 const { W, H, T, g, rr, txt, fitTxt, circle, rnd, ri, pick, clamp } = G;
 const HOP = 0.14, ROAD = [8, 9, 10, 11], RIVER = [2, 3, 4, 5, 6];
-const BOATS = ['PEGASUS V', 'DORY', 'KEIL', 'FREO', 'TOP END', 'MACKEREL'];
+const BOATS = ['UB-19', 'PEGASUS V', 'DORY', 'KEIL', 'FREO', 'TOP END', 'MACKEREL'];
 const CAR_COLS = ['#e94b3c', '#ffd23f', '#5cc8ff', '#a66bff', '#ffffff', '#7bd389', '#ff8fc7'];
 const THEMES = {
   harbour: { grass: '#3c8d3f', start: '#58a85a', water: '#2b78b8', sand: '#e8cf8a', bank: '#2f6b33' },
@@ -158,11 +158,12 @@ function atDock() {
   if (!a) { resetPlayer(); return; }
   if (a.ok) {
     G.sfx('ding'); burst(P.x, P.y, '#ffe14d', 24); floatText('★', P.x, P.y - 20, '#ffe14d');
+    if (!S.wrongs) G.skillMark(step().skill, true);
     const st = step();
     G.sayNow(st.okSay);
     S.si++;
     if (S.si >= S.q.steps.length) {
-      S.done = true; G.jingle();
+      S.done = true; G.jingle(); G.earn(1);
       G.say(S.q.doneSay || [], pick(['great_', 'super_']) + G.player.toLowerCase());
       setTimeout(() => { if (G.mode === mode && S.done) G.stepDone(S.oops); }, 1500);
       return;
@@ -172,6 +173,7 @@ function atDock() {
   }
   S.oops++; G.sfx('bonk');
   floatText((a.t || a.e || '') + '?', P.x, P.y - 20, '#fff');
+  if (!S.wrongs) G.skillMark(step().skill, false);
   if (S.remi) G.sayNow('remi_wrong', step().say);
   else G.sayNow(a.t && a.t.length === 1 && /[A-Z]/.test(a.t) ? ['th_' + a.t] : [], pick(['wrong1', 'wrong2']), step().say);
   resetPlayer(); S.cool = .8;

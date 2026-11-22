@@ -57,12 +57,16 @@
   .sticker.locked { background:#eee; color:#999; }
   #guideFact { font-size:18px; min-height:48px; background:#fff; border-radius:12px; padding:8px; margin:10px 0 0; }
   .row { display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:18px; margin:10px 0; text-align:left; }
+  .rep { text-align:left; font-size:16px; background:#fff; border-radius:12px; padding:8px 10px; margin:6px 0; line-height:1.3; }
+  .sticker em { display:block; font-style:normal; font-size:12px; height:0; text-align:right; position:relative; top:-4px; }
+  .game { width:120px; } .game span { font-size:46px; } .game b { font-size:14px; }
+  .pbtn.team { min-width:354px; }
   input, select { font:inherit; font-size:18px; border-radius:10px; border:2px solid #ccc; padding:4px 8px; }
 </style>
 </head>
 <body>
 <div id="wrap">
-  <div id="topbtns" class="hidden"><button id="menuBtn">👤 Players</button><button id="mapBtn">🗺️ Map</button><button id="guideBtn">📒 Field Guide</button><button id="setBtn">⚙️</button></div>
+  <div id="topbtns" class="hidden"><button id="menuBtn">👤 Players</button><button id="mapBtn">🗺️ Map</button><button id="guideBtn">📒 Guide</button><button id="sanctBtn">🏞️ Sanctuary</button><button id="gamesBtn">🎮 Games</button><button id="setBtn">⚙️</button></div>
   <div id="stage">
     <canvas id="game" width="704" height="832"></canvas>
 
@@ -73,6 +77,8 @@
         <div class="players">
           <button class="pbtn" style="background:#ff7a1a" data-player="Felix"><b>Felix</b><span id="lvFelix"></span></button>
           <button class="pbtn" style="background:#2f7fd8" data-player="Remi"><b>Remi</b><span id="lvRemi"></span></button>
+        </div>
+        <div class="players"><button class="pbtn team" style="background:#3fa34d" data-player="Team"><b>👫 Felix + Remi</b><span>Play together</span></button>
         </div>
         <p class="small">We play on Larrakia Country. 🙏</p>
       </div>
@@ -95,6 +101,10 @@
       <div class="card"><h2>📒 Field Guide</h2><div id="guideList"></div><p id="guideFact"></p><button class="btn small" id="guideClose">Close</button></div>
     </div>
 
+    <div id="games" class="overlay hidden">
+      <div class="card"><h2>🎮 Games</h2><div class="stickers" id="gamesList" style="justify-content:center"></div><button class="btn small" id="gamesClose">Close</button></div>
+    </div>
+
     <div id="settings" class="overlay hidden">
       <div class="card">
         <h2>⚙️ Grown-ups</h2>
@@ -102,7 +112,9 @@
         <div id="setBox" class="hidden">
           <div class="row">Play time limit <select id="setLimit"><option value="10">10 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="0">No limit</option></select></div>
           <div class="row">Show Larrakia / Kriol names (checked ones only) <input type="checkbox" id="setCulture"></div>
+          <div class="row">Season <select id="setSeason"><option value="auto">Today's date</option><option value="build">⛈️ Build-up</option><option value="wet">🌧️ The Wet</option><option value="runoff">🌊 Run-off</option><option value="knock">🌾 Knock 'em down</option><option value="cool">🌤️ Cool dry time</option><option value="hot">☀️ Hot dry time</option></select></div>
           <div class="row"><span id="playedFor"></span><button class="btn small" id="setReset">Reset timer</button></div>
+          <h3 style="margin:8px 0 2px;text-align:left">Progress</h3><div id="report"></div>
           <div class="row"><button class="btn small blue" id="setUnlock">Unlock all places</button><button class="btn small" id="setWipe" style="background:#c0392b">Reset player</button></div>
         </div>
         <button class="btn small blue" id="setClose">Close</button>
@@ -125,6 +137,13 @@
 <script src="fish.js"></script>
 <script src="surf.js"></script>
 <script src="car.js"></script>
+<script src="safari.js"></script>
+<script src="sanct.js"></script>
+<script src="boat.js"></script>
+<script src="skate.js"></script>
+<script src="hacky.js"></script>
+<script src="judo.js"></script>
+<script src="clap.js"></script>
 <script>
 G.boot();
 // offline: register the service worker, then quietly cache every voice clip once (so it works in the car)

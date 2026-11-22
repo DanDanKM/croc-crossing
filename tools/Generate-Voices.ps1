@@ -23,7 +23,7 @@ $manPath = Join-Path $dir 'manifest.json'
 $man = @{}
 if (Test-Path $manPath) { (Get-Content $manPath -Raw -Encoding UTF8 | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $man[$_.Name] = $_.Value } }
 
-$crocKeys = @('chomp', 'croceat', 'f_croc', 'f_crocgot', 'c_crocroad', 'bd_snappy')
+$crocKeys = @('chomp', 'croceat', 'f_croc', 'f_crocgot', 'c_crocroad', 'bd_snappy', 'b_croc')
 $keys = @($lines.PSObject.Properties.Name)
 $made = 0; $kept = 0; $failed = 0
 foreach ($k in $keys) {

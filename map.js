@@ -38,9 +38,13 @@ function draw() {
   // kid at the furthest unlocked stop
   const cur = C.stops[Math.min(unlocked(), C.stops.length - 1)], [kx, ky] = stopXY(cur);
   G.drawKid(kx + 22, ky - 26 + Math.sin(t * 4) * 2, .7);
-  // HUD
+  G.drawWeather(t);
+  // HUD: season, title, shells
   g.fillStyle = '#123b2c'; g.fillRect(0, 0, W, T);
-  txt('🗺️ Top End Adventure', W / 2, T / 2, 28, '#ffe14d');
+  const se = G.season();
+  rr(8, 10, 168, T - 20, 12, se.sky); fitTxt(se.emoji + ' ' + se.name, 92, T / 2 + 1, 156, 18, '#1d2a24');
+  txt(G.coop ? '👫 Team Felix + Remi' : '🗺️ Top End Adventure', W / 2 + 10, T / 2, G.coop ? 22 : 24, '#ffe14d');
+  if (G.prog && !G.coop) txt('🐚 ' + (G.prog.shells || 0), W - 78, T / 2, 20, '#fff', 'right', 700);
   txt('🔊', W - 36, T / 2, 30, '#fff');
   // stop panel
   const s = C.stops[sel], open = sel <= unlocked(), py = 440;
@@ -59,7 +63,7 @@ function draw() {
   else txt('🔒 Finish the place before to unlock', W / 2, py + 268, 22, '#56645d', 'center', 700);
   txt(bonusLabel(s), W / 2, py + 336, 17, '#56645d', 'center', 600);
 }
-const bonusLabel = s => G.isRemi() ? '' : 'Bonus game: ' + ({ fishing: '🎣 barra fishing', surfing: '🏄 surfing', car: '🚗 car mission' }[s.bonus]);
+const bonusLabel = s => G.isRemi() || G.coop ? '' : 'Bonus game: ' + C.games[s.bonus].join(' ');
 
 G.modes.map = {
   start(menu) { behindMenu = !!menu; sel = Math.min(unlocked(), C.stops.length - 1); G.setPad('none'); if (!menu && G.prog) G.say('map'); },
@@ -68,6 +72,7 @@ G.modes.map = {
   tap(p) {
     for (let i = 0; i < C.stops.length; i++) { const [x, y] = stopXY(C.stops[i]); if (Math.hypot(p.x - x, p.y - y) < 30) { sel = i; G.sfx('hop'); if (i <= unlocked()) G.sayNow('st_' + C.stops[i].id); return; } }
     if (sel <= unlocked() && p.y > 440 + 230 && p.y < 440 + 306 && Math.abs(p.x - W / 2) < 140) { G.stopVoice(); G.startStop(sel); }
+    if (p.y < T && p.x < 180) G.sayNow('ss_' + G.season().id);
   },
   repeat() { G.sayNow('map'); }
 };

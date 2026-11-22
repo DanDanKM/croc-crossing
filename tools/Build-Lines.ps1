@@ -54,6 +54,13 @@ foreach ($p in $C.plurals) { W $p[0]; W $p[1]; Add "pl_$($p[0])" "One $($p[0]), 
 foreach ($w in $C.notAdj) { W $w }
 foreach ($f in $C.flags) { W $f[0] }
 foreach ($f in $C.fish) { W $f.name }
+# v3: seasons, daily surprises, photo safari, sports, judo verbs, counting to ten, clap-along words
+foreach ($s in $C.seasons) { Add "ss_$($s.id)" $s.fact; $i = 0; foreach ($p in $s.surprise) { Add "sp_$($s.id)_$i" "$($p[1])! $($p[2])"; $i++ } }
+foreach ($s in $C.stops) { foreach ($a in $s.animals) { if ($a.home -ne 'plant') { Add "sn_$($a.id)" "Snap the $($a.word)!" } } }
+for ($n = 0; $n -lt 10; $n++) { Add "n_$($n + 1)" "$($C.count10.en[$n])!"; Add "idw_$(Slug $C.count10.id[$n])" "$($C.count10.id[$n])." }
+foreach ($v in $C.verbs) { W $v; Add "jv_$v" "Find the doing word... $v!" }
+foreach ($p in $C.beats.PSObject.Properties) { W $p.Name }
+foreach ($p in $C.shop) { Add "shop_$($p[0])" "A $($p[2])!" }
 
 $json = $L | ConvertTo-Json -Compress
 $out = Join-Path $root 'lines.js'

@@ -1,6 +1,6 @@
 // Offline support: app files are network-first (so updates arrive), voice clips and icons are cache-first.
-const SHELL = 'croc-shell-v3', MEDIA = 'croc-media-v1';
-const FILES = ['./', 'index.html', 'content.js', 'lines.js', 'core.js', 'questions.js', 'hop.js', 'map.js', 'fish.js', 'surf.js', 'car.js', 'manifest.webmanifest', 'icons/apple-touch-icon.png', 'icons/icon-192.png', 'voice/index.json'];
+const SHELL = 'croc-shell-v4', MEDIA = 'croc-media-v1';
+const FILES = ['./', 'index.html', 'content.js', 'lines.js', 'core.js', 'questions.js', 'hop.js', 'map.js', 'fish.js', 'surf.js', 'car.js', 'safari.js', 'sanct.js', 'boat.js', 'skate.js', 'hacky.js', 'judo.js', 'clap.js', 'manifest.webmanifest', 'icons/apple-touch-icon.png', 'icons/icon-192.png', 'voice/index.json'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== SHELL && k !== MEDIA).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
