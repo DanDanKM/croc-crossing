@@ -1,42 +1,43 @@
-# 🐊 Croc Crossing
+# 🐊 Croc Crossing: Top End Adventure
 
-A hopping letters-and-spelling game made for Felix and Remi (ages 4 and up).
+A learning adventure made for Felix (5) and Remi (3). It starts in Darwin and travels across the Top End to Timor-Leste, Indonesia and Papua New Guinea. Play it at **https://dandankm.github.io/croc-crossing/**. On an iPad, open it in Safari, then Share → Add to Home Screen. It works offline once it's been opened on wifi.
 
-Hop across the road — where a hungry croc lies in wait and gobbles up the cars — then ride the logs, boats and croc backs over the river and land on the right letter at the jetty. Hop on the croc's back when his mouth is shut!
+## What's in it
 
-## Levels
+- **Journey map**: 9 places, each with its own animals, plants and a bonus game. At each place you meet the animals, learn an Indonesian word of the day, hop across the road and river to the right answers, play the bonus game, and finish with a quiz (Felix).
+- **Felix** gets letters and sounds, spelling, sight words, rhymes, syllables, sentences (capital letters and full stops), plurals, describing words, nature, geography and basic Indonesian.
+- **Remi** gets picture and voice mode: animals, colours, counting, the letter R and animal sounds. Cars stop for him, and he taps the answer to hop there.
+- **👫 Felix + Remi**: team play on one iPad. They take turns (Remi taps the picture, Felix reads and spells), then play a team bonus game.
+- **Smart practice**: each child's right and wrong answers are remembered, and the tricky letters, words and Indonesian words come back more often. The grown-ups page (⚙️) shows progress and what's being practised.
+- **Seasons**: the six Top End seasons (Build-up, the Wet, Run-off, Knock 'em down, Cool dry time, Hot dry time) follow today's date. Each has its own weather and three daily surprises, and there's a shell bonus for a play streak.
+- **🏞️ Sanctuary**: every animal you meet comes to live there. Spend shells on waterlilies, trees, nests, a canoe or a rainbow.
+- **📷 Photo safari**: snap the animal that's asked for (reading practice). Photos go into the Field Guide, with golden shots for perfect timing.
+- **Bonus games** (replay them any time from 🎮 Games):
+  - 🎣 barra fishing
+  - 📷 photo safari
+  - 🍌 banana boat UB-19 river run (spell with letter buoys)
+  - 🏄 surfing
+  - 🦶 hacky sack (count to ten in English and Indonesian)
+  - 🚗 car mission
+  - 🥋 judo (bow, find the doing word, time the throw)
+  - 🛹 skateboard and 🚲 BMX (grab the word you hear)
+  - 🥁 clap-along (syllable beats, plus an Indonesian counting chant)
 
-| Levels | What you learn |
-|---|---|
-| 1–3 | **Letter hunt** – find the letter (upper and lower case) |
-| 4–6 | **Sound hunt** – what letter does 🍎 apple start with? |
-| 7–9 | **Spelling** – three-letter words (CAT, DOG, BUS…), letters shown as a hint |
-| 10–12 | Four-letter words (CROC, BOAT, DORY…) |
-| 13+ | Big words, no hints (OCEAN, ANCHOR, DARWIN…) |
+## Code
 
-After every third level there's a **bonus car mission**: a top-down city drive where you visit the houses with the right letters on their roofs, in order, to spell a word. Collect stars, dodge the crocs on the road, beat the clock.
-
-Each player's level and stars are saved on the device. Grown-ups can pick a start level on the menu.
-
-## Controls
-
-Arrow keys / WASD, the on-screen arrows, or swipe. Tap the game to hop forward. In the car: ⬆️ go, ⬇️ brake/reverse, ⬅️➡️ steer. Tap 🔊 to hear the instruction again.
+Plain HTML, canvas and JavaScript, with no build step.
+- `content.js`: all the places, animals, words, seasons and phrases.
+- `core.js`: audio, voices, progress, menus and the journey.
+- One file per mode: `hop`, `map`, `fish`, `surf`, `car`, `safari`, `sanct`, `boat`, `skate`, `hacky`, `judo`, `clap`.
+- `sw.js` + `manifest.webmanifest`: offline use and the home-screen icon.
 
 ## Voices
 
-Every spoken line lives in `data.js` (built by `tools/Build-Data.ps1`). Without generated clips the game uses the device's own voice. To use ElevenLabs voices:
+`tools/Build-Lines.ps1` turns `content.js` into `lines.js` (every spoken line, keyed). `tools/Generate-Voices.ps1` voices the new or changed lines with ElevenLabs, using the key from the `ELEVENLABS_API_KEY` user variable:
+- Matilda for the narrator
+- Gavrila for Indonesian words
+- Clyde for the croc
 
-```powershell
-$env:ELEVENLABS_API_KEY = '<your key>'
-.\tools\Generate-Voices.ps1                 # default voice; add -VoiceId <id> to choose another
-```
+Without clips, the device's own voice is used. Test locally with `tools/Serve-Local.ps1` (http://localhost:8766/).
 
-That writes `voice/*.mp3` plus `voice/index.json` (about 250 clips, ~6,300 characters). Commit the `voice` folder and the game picks the clips up automatically.
-
-## Run locally
-
-```powershell
-.\tools\Serve-Local.ps1     # then open http://localhost:8766/
-```
-
-No build step, no libraries — plain HTML, canvas and JavaScript.
+Larrakia and Kriol names stay hidden until they've been checked with someone local (⚙️ setting).
