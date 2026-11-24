@@ -351,6 +351,17 @@ G.playGame = k => {
 $('guideClose').onclick = () => $('guide').classList.add('hidden');
 function openGuide() {
   const box = $('guideList'); box.innerHTML = '';
+  if ((C.books || []).length) { // local books on the shelf at home: tap to hear who wrote it
+    const h = document.createElement('h3'); h.textContent = '📚 Our books'; box.appendChild(h);
+    const row = document.createElement('div'); row.className = 'stickers';
+    for (const bk of C.books) {
+      const b = document.createElement('button'); b.className = 'sticker';
+      b.innerHTML = '<span>' + bk.emoji + '</span><b>📖 ' + bk.title + '</b><i>' + bk.by + '</i>';
+      b.onclick = () => { $('guideFact').textContent = bk.title + ': ' + bk.sub + '. By ' + bk.by + ' (' + bk.pub + ').'; G.sayNow('bk_' + bk.id); };
+      row.appendChild(b);
+    }
+    box.appendChild(row);
+  }
   for (const s of C.stops) {
     const h = document.createElement('h3'); h.textContent = s.flag + ' ' + s.name; box.appendChild(h);
     const row = document.createElement('div'); row.className = 'stickers';
@@ -491,21 +502,21 @@ G.addMoon = addMoon;
 G.tryNight = () => { if ((G.prog.moons || 0) >= G.MOONS) { G.host = 'night'; G.pendingSay = 'host_night'; G.playGame('night'); } else G.sayNow('nf_need'); };
 G.lk = id => G.settings.culture && window.LARRAKIA && window.LARRAKIA[id];
 function meet(i) {
-  const R = G.run, a = R.stop.animals[i], n = Math.min(3, R.stop.animals.length);
+  const R = G.run, a = R.stop.animals[i], n = Math.min(R.stop.meet || 3, R.stop.animals.length), bk = (C.books || []).find(b => b.animal === a.id);
   G.setMode(G.modes.hop, null, R); // scenery behind the cards
   const iw = C.indo.animals[a.id], lk = G.lk(a.id);
-  const keys = ['nm_' + a.id, 'fact_' + a.id, ...(lk ? ['lk_intro', 'lk_' + a.id] : []), ...(iw ? ['idc_' + a.id, 'idw_' + G.slug(iw)] : [])];
+  const keys = ['nm_' + a.id, 'fact_' + a.id, ...(lk ? ['lk_intro', 'lk_' + a.id] : []), ...(iw ? ['idc_' + a.id, 'idw_' + G.slug(iw)] : []), ...(bk ? ['bko_' + bk.id] : [])];
   if (i === 0) G.sayNow('st_' + R.stop.id, keys); else G.sayNow(keys);
   G.cardReplay = () => G.sayNow(keys);
   G.preload(R.stop.animals.slice(0, n).flatMap(x => ['nm_' + x.id, 'fact_' + x.id]));
   const last = i >= n - 1;
-  G.showCard((i === 0 ? R.stop.flag + ' ' : '') + a.name, a.emoji, (lk ? '🪃 ' + lk.w + '   ' : '') + (iw ? '🇮🇩 ' + iw : ''), last ? '▶ Play!' : '▶',
+  G.showCard((i === 0 ? R.stop.flag + ' ' : '') + a.name, a.emoji, (lk ? '🪃 ' + lk.w + '   ' : '') + (iw ? '🇮🇩 ' + iw : '') + (bk ? '  📚' : ''), last ? '▶ Play!' : '▶',
     () => { G.cardReplay = null; G.stopVoice(); last ? G.nextStep() : meet(i + 1); });
 }
 function breakTime() {
   G.run.i--; // resume this step later
-  G.sayNow('break');
-  G.showCard('🌴', '🧃🤸', '', '🗺️', () => G.setMode(G.modes.map));
+  G.sayNow('break', (C.books || []).length ? 'story_time' : []);
+  G.showCard('🌴', '🧃🤸📚', '', '🗺️', () => G.setMode(G.modes.map));
 }
 function stopDone() {
   const R = G.run, oops = R.oops, stars = oops <= 2 ? 3 : oops <= 6 ? 2 : 1;

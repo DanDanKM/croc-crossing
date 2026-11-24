@@ -1,6 +1,6 @@
 window.CONTENT = {
 "stops": [
- {"id":"darwin","name":"Darwin Harbour","country":"Australia","flag":"🇦🇺","lon":130.84,"lat":-12.46,"theme":"harbour","bonus":"fishing",
+ {"id":"darwin","name":"Darwin Harbour","country":"Australia","flag":"🇦🇺","lon":130.84,"lat":-12.46,"theme":"harbour","bonus":"fishing","meet":4,
   "intro":"Welcome to Darwin Harbour, on Larrakia Country! Let's meet the animals of the Top End.",
   "spell":["CROC","CRAB","SUN","NET"],
   "sentences":[["The","croc","is","big"],["I","can","see","a","crab"],["The","fish","can","swim"]],
@@ -11,6 +11,8 @@ window.CONTENT = {
     "fact":"Barramundi are big silver fish. Lots of barra start life as boys and turn into girls when they grow up!","clue":"Which silver fish do Top End fishers love to catch?"},
    {"id":"crab","word":"crab","name":"Mud crab","emoji":"🦀","home":"sea","adj":"strong","sound":"click, click",
     "fact":"Mud crabs live in the mangroves. They have big strong claws for cracking shells.","clue":"Which animal walks sideways and has big claws?"},
+   {"id":"owl","word":"owl","name":"Barking owl","emoji":"🦉","home":"tree","adj":"sleepy","sound":"hoo, hoo",
+    "fact":"Owls sleep in the day and wake up at night. The barking owl calls woof woof, just like a dog!","clue":"Which bird sleeps all day and wakes up at night?"},
    {"id":"jelly","word":"jellyfish","name":"Box jellyfish","emoji":"🪼","home":"sea","adj":"wobbly",
     "fact":"Box jellyfish have very long stingers. In the Top End we wear a stinger suit to swim safely!","clue":"Which sea animal has long stingers?"},
    {"id":"dolphin","word":"dolphin","name":"Snubfin dolphin","emoji":"🐬","home":"sea","adj":"smart","sound":"click and whistle",
@@ -224,9 +226,10 @@ window.CONTENT = {
  "greet": [["halo","hello","👋"],["selamat pagi","good morning","🌅"],["terima kasih","thank you","🙏"],["sama-sama","you're welcome","😊"],["apa kabar","how are you","🙂"],["baik","good","👍"],["ya","yes","✅"],["tidak","no","❌"],["sampai jumpa","see you later","👋"]],
  "numbers": ["satu","dua","tiga","empat","lima"],
  "colours": {"red":"merah","blue":"biru","yellow":"kuning","green":"hijau","orange":"oranye","purple":"ungu"},
- "animals": {"croc":"buaya","barra":"ikan","crab":"kepiting","jelly":"ubur-ubur","dolphin":"lumba-lumba","mangrove":"pohon bakau","jabiru":"burung","frill":"kadal","goose":"angsa","lily":"teratai","turtle":"penyu","eagle":"elang","octopus":"gurita","shark":"hiu","dingo":"anjing","goanna":"biawak","kooka":"burung","pandanus":"pandan","boab":"pohon","freshie":"buaya","cockatoo":"kakatua","clown":"ikan badut","coral":"karang","cray":"udang karang","whale":"paus","crocstory":"buaya","whaleshark":"hiu paus","coffee":"kopi","buffalo":"kerbau","komodo":"komodo","orangutan":"orangutan","rice":"padi","volcano":"gunung api","treeroo":"kanguru pohon","paradise":"cenderawasih","birdwing":"kupu-kupu","cassowary":"kasuari","ulysses":"kupu-kupu","cod":"ikan","flyingfox":"kelelawar","treefrog":"katak","clam":"kerang","swan":"angsa","sealion":"singa laut","lobster":"lobster"},
+ "animals": {"croc":"buaya","owl":"burung hantu","barra":"ikan","crab":"kepiting","jelly":"ubur-ubur","dolphin":"lumba-lumba","mangrove":"pohon bakau","jabiru":"burung","frill":"kadal","goose":"angsa","lily":"teratai","turtle":"penyu","eagle":"elang","octopus":"gurita","shark":"hiu","dingo":"anjing","goanna":"biawak","kooka":"burung","pandanus":"pandan","boab":"pohon","freshie":"buaya","cockatoo":"kakatua","clown":"ikan badut","coral":"karang","cray":"udang karang","whale":"paus","crocstory":"buaya","whaleshark":"hiu paus","coffee":"kopi","buffalo":"kerbau","komodo":"komodo","orangutan":"orangutan","rice":"padi","volcano":"gunung api","treeroo":"kanguru pohon","paradise":"cenderawasih","birdwing":"kupu-kupu","cassowary":"kasuari","ulysses":"kupu-kupu","cod":"ikan","flyingfox":"kelelawar","treefrog":"katak","clam":"kerang","swan":"angsa","sealion":"singa laut","lobster":"lobster"},
  "facts": {"orangutan":"Orangutan is an Indonesian word. Orang means person, and hutan means forest. A person of the forest!"}
 },
+"books": [{"id":"witladla","emoji":"🦉","title":"Witladla","sub":"My First Larrakia Animal Book","by":"Aunty June Mills","pub":"Artback NT, 2020","animal":"owl"}],
 "buddies": [["pickles","Pickles","🐕","our dog"],["snappy","Snappy","🐊","the croc"],["shelly","Shelly","🐢","the turtle"],["frilly","Frilly","🦎","the lizard"]],
 "phrases": {
  "hi_felix":"G'day Felix! Ready for an adventure in the Top End?",
@@ -282,6 +285,10 @@ window.CONTENT = {
  "shells":"You earned shells! Spend them in your sanctuary.",
  "team":"Team time! Felix and Remi, let's play together!","turn_felix":"Felix, your turn!","turn_remi":"Remi, your turn!",
  "games":"Pick a game to play!",
+ "books":"Our books! Tap one to hear about it.",
+ "bk_witladla":"Witladla! Larrakia Elder Aunty June Mills tells the story of the little mukmuk, Witladla. Ask Mum or Dad to read it with you!",
+ "bko_witladla":"Owls are in one of your books! Aunty June Mills tells the story of the little mukmuk, Witladla.",
+ "story_time":"Story time! Grab a book from your shelf, like Witladla, the little owl.",
  "sa_intro":"Welcome to your animal sanctuary! Every animal you meet comes to live here. Spend your shells to make it beautiful.",
  "sa_buy":"Where should it go? Tap a spot!","sa_need":"You need more shells. Play a game to earn some!","sa_placed":"Looks great!",
  "ph_intro":"Photo safari! Tap the animal I ask for to take its photo. Wait till it's right up high for a golden shot!",

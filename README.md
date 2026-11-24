@@ -56,3 +56,10 @@ Larrakia and Kriol names stay hidden until they've been checked with someone loc
   - "1 hour" play limit.
   - The grown-ups page has a "Plane ready?" check plus Download all for offline use.
 - **Larrakia names:** these stay in a local-only file (`larrakia.local.js`, gitignored) until Larrakia Nation gives consent to publish them.
+
+## 📚 Local books
+
+The Field Guide opens with **Our books**, a shelf of local books to read together. Tap a book to hear about it. The game only refers to the books; it doesn't retell their stories.
+- *Witladla: My First Larrakia Animal Book* by Larrakia Elder Aunty June Mills (Artback NT, 2020). The barking owl at Darwin links to it, and the break card says it's story time.
+
+To add a book, add it to `books` in `content.js` with a `bk_<id>` phrase. If the book has an `animal` link, also add a `bko_<id>` phrase.
