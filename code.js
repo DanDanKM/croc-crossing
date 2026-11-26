@@ -99,11 +99,14 @@ function slots() {
 function add(k) {
   if (S.busy || S.exec || S.L.kind === 'bug') return;
   const last = S.prog[S.prog.length - 1];
-  if (k === 'loop' && last && last.k === 'loop') { last.n = last.n >= 5 ? 2 : last.n + 1; G.sfx('hop'); return; }
+  const lastLoop = [...S.prog].reverse().find(s => s.k === 'loop');
+  // tapping 🔁 again adds a repeat: to a loop that's still waiting for its arrow, or (when the program is full) to the last loop
+  if (k === 'loop' && lastLoop && (last === lastLoop || S.prog.length >= S.L.cap)) return bumpLoop(lastLoop);
   if (S.prog.length >= S.L.cap) { G.sfx('bump'); G.sayNow(S.L.loopOk ? 'cd_full' : 'cd_room'); return; }
   S.prog.push(k === 'loop' ? { k, n: 2 } : { k }); G.sfx('hop');
   if (!S.saidGo && S.prog.length >= S.L.sol.length) { S.saidGo = true; G.say('cd_go'); }
 }
+function bumpLoop(s) { s.n = s.n >= 6 ? 2 : s.n + 1; G.sfx('hop'); G.sayNow('n_' + s.n); }
 function expand(prog) {
   const out = [];
   for (let i = 0; i < prog.length; i++) {
@@ -130,7 +133,7 @@ function nextMove() {
 }
 function fail(k) {
   S.exec = null; S.busy = true; S.fails++; if (S.fails >= (S.remi ? 1 : 2)) S.help = true;
-  G.sayNow(k);
+  G.sayNow(k, k === 'cd_short' && S.prog.some(s => s.k === 'loop') ? 'cd_more' : []);
   later(1.5, () => { S.pos = { ...S.L.start }; S.ang = S.L.ang; S.busy = false; G.sfx('whoosh'); });
 }
 function win() {
@@ -240,6 +243,7 @@ function tap(p) {
   slots().forEach((r, i) => {
     if (!inR(p, r) || !S.prog[i]) return;
     if (S.L.kind === 'bug') { const s = S.prog[i]; s.k = CYCLE[(CYCLE.indexOf(s.k) + 1) % 4]; G.sfx('hop'); }
+    else if (S.prog[i].k === 'loop') bumpLoop(S.prog[i]); // tap a loop block: one more repeat
     else { S.prog.splice(i, 1); G.sfx('bump'); }
   });
 }
